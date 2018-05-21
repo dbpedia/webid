@@ -32,6 +32,24 @@
     """
 
 
-	webid:publickey a owl:Datatypeproperty .
+	webid:publickey a owl:DatatypeProperty .
+	
+	webid:OpenSSLFormat a owl:Datatype ;
+	rdfs:label "OpenSSL formated key"@en ;
+	rdf:comment "key format used by OpenSSL e.g. ssh-rsa AAA....YA75c6p user@localhost"@en .
+	
+	webid:PEMFormat a owl:Datatype ;
+	rdfs:label "PEM formated key"@en ;
+	rdfs:comment """key format PEM e.g. 	
+	-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtj5Ndusc1MGYDpEHArlN
+....
+oKRNUtggpQ7ged6bcpTg7JAC8jRgxfxLKOWtPDn2i0620ne+zUzb2aPqQGWAO+XO
+qQIDAQAB
+-----END PUBLIC KEY-----
+"""@en .
+	
+	
+	
 
 
