@@ -1,0 +1,37 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/>.
+@prefix webid: <http://webid.dbpedia.org/webid#>.
+
+<http://webid.dbpedia.org/webid#> a owl:Ontology .
+	vann:preferredNamespacePrefix "webid" ;
+    vann:preferredNamespaceUri "http://webid.dbpedia.org/webid#" ;
+    # todo change
+    vann:changes <https://github.com/dbpedia/webid/commits/master> ;
+    
+    owl:versionInfo "Changelog is appended to dc:description" ;
+ 
+ 
+    dcterms:license <http://creativecommons.org/licenses/by/3.0/> ;		
+    dcterms:license <http://www.apache.org/licenses/LICENSE-2.0> ;		
+    dcterms:title "WebID Ontology"@en ;
+
+    rdfs:label "WebID Ontology"@en ;
+    rdfs:isDefinedBy <http://webid.dbpedia.org/webid/webid.ttl> ;
+    rdfs:comment """The main purpose of this ontology is to provide a stable, workable version to add the public key in different formats to your FOAF profile."""@en ;
+
+	dc:creator "Sebastian Hellmann" ;
+    dc:publisher "DBpedia" ;
+    dc:rights """This ontology is licensed under Apache 2.0 (http://www.apache.org/licenses/LICENSE-2.0) and CC-BY (http://creativecommons.org/licenses/by/3.0/)"""@en ;
+	
+    dc:description """ 
+    Todo encode: https://serverfault.com/questions/9708/what-is-a-pem-file-and-how-does-it-differ-from-other-openssl-generated-key-file
+    """
+
+
+	webid:publickey a owl:Datatypeproperty .
+
+
