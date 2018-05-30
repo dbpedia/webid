@@ -28,6 +28,12 @@ WebID is using the FOAF Vocabulary in RDF. It has many different serialisation f
 # How to publish/discover a WebID (Rule 2 and 3)
 
 ## Discovery
+
+`curl -H "Accept: application/json-ld,text/turtle" <webid-uri>`
+
+if returns 30X, follow location to json-ld/turtle, check for `"@id":"webid-uri"` 
+if returns HTML, follow `head/meta/link rel=alternate type=" `  
+
 There are three main ways to discover a WebID:
 1. HTTP Response Header
 2. Link Rel in HTML meta
