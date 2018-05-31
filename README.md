@@ -1,60 +1,100 @@
 # WebID
-WebID Creation and Vocabulary
+WebID Creation and Validation (Tutorial, Tools, Best practices)
 
-# What is a WebID?
-A WebID is a novel way to identify and authenticate users and organisations on the Web with simple methods. The main advantages are:
-* people and organisations become the main authority for their data
-* you do not need passwords any more as authentication is done with your own secure key
+# Why WebID?
+WebID is a novel way to identify and authenticate users and organisations on the Web with established methods. The main advantages are:
+* people and organisations become the main authority for their data with full control
+* No need for passwords any more. Authentication is done with your own secure key
 
-In comparison to any other service like Facebook, LinkedIn or OpenID you are the owner of your data and of your secure key. 
-With the WebID file and your key you can create accounts, delete accounts and establish secure connections. 
+In comparison to any other services like Facebook, LinkedIn or OpenID you are the owner of the data and of the secure key and therefore your own authority.
+The WebID workflow uses public/private key cryptography and client certifcate authorization to establish secure, authenticated HTTPS connections. 
+We compiled a list of background reading at the end. 
+ 
 
+# Terminology
+WebID or WebID URI - The WebID itself is an identifier that represents a person or an organisation. In simple terms it is a self-chosen URI that can be used to retrieve additional information in form of the WebID profile document via the browser or with software (e.g. `curl`). Note the duplicate in WebID(entifier) and Uniform Resource Identifier (URI).     
+Examples:
 
-# Further reading
-While we try to summarize here the basic points, we would like to hint you at the following pages:
-* 
+WebID profile document or WebID file - The WebID profile document is the file that is downloaded when you execute a HTTP(S) request  and contains the identifier and all relevant information about the person and organisation in particular the RSA Public Key used to verify authentification. The file is normally written in Turtle Syntax (RDF).
 
-# How does it work?
-The four rules of WebID:
-1.  The WebID is a file that provides a machine-readable description of a person or an organisation.
-2.  The WebID file is editable only by its owner or the owning organisation (to prevent fraud). 
-3.  The WebID file must be reachable via HTTP(S), so any application can discover and verify it.
-4.  One or several public key(s) and a hash of email address are embedded in the WebID. The owner of the WebID can therefore prove his ownership of the email and the WebID with the corresponding private key during authentification. 
+`#` fragment - In website URLs the `#` is used to jump to certain parts of a HTML page, usually a paragraph. In WebID, the URL of the WebID profile document is appended by a fragment `#this` or `#me` to distinguish between the URL of the WebID profile document (the whole file) and the identifier and data in the document (part of the file).  
 
-# How to generate a WebID (Rule 1)
+Client Certifcate or PKCS12 File (*.pfx;*.p12) - The file that contains an X.509 certificate along with the private key to establish the secure connection and authentification. 
 
-WebID is using the FOAF Vocabulary in RDF. It has many different serialisation formats. The easiest to write is Turtle, which can be written manually. JSON-LD and RDFXML are good alternatives. 
-
-# How to publish/discover a WebID (Rule 2 and 3)
-
-## Discovery
-
-`curl -H "Accept: application/json-ld,text/turtle" <webid-uri>`
-
-if returns 30X, follow location to json-ld/turtle, check for `"@id":"webid-uri"` 
-if returns HTML, follow `head/meta/link rel=alternate type=" `  
-
-There are three main ways to discover a WebID:
-1. HTTP Response Header
-2. Link Rel in HTML meta
-3. A third party links your WebID
-
-## Publication
-
-1. Put the file on own webserver
-2. Use Github.io
-
-# How to add your public key and other security features (Rule 4)
-## SHA 1 and SHA 256 sum of email
-
-* The FOAF property foaf:mbox_sha1sum 'should' be kept for downward compatibility.
-* The property webid:mbox_sha256sum 'must' be used in all DBpedia related activities to verify email against a WebID profile 
-
-Generate with `echo -n peter@example.org | sha1sum` resulting in `<#me> foaf:mbox_sha1sum "728b61829d8052a89a111991707091dec09fe190" `
-Generate with `echo -n peter@example.org | sha256sum` resulting in `<#me> webid:mbox_sha256sum "97cb7349a88f41fa1338c41124dcfce6017a02e6b58ee7022799e650e817fb5a" `
-
-
-
+# Example
+This is Jan's WebID: http://holycrab13.github.io/webid.ttl#this
+If you open it in a browser or `curl` it the `#this` is ignored and the full turtle file is retrieved. In the turtle file you can find a section with additional information about Jan as well as his public key:
 ```
-openssl dgst -sha256 -sign ~/.ssh/$our_private_key  anyFile.txt  | openssl base64 -out anyFile.signed
+<#this> a foaf:Person ;
+   foaf:name "Jan Forberg";
+   cert:key [ 
+       a cert:RSAPublicKey;
+       rdfs:label "made on 23 November 2011 on my laptop";
+       cert:modulus """00:[....]9b"""^^xsd:hexBinary;
+       cert:exponent 65537 ;
+      ] .
+``` 
+
+# The Rules of WebID
+1. The WebID profile document is editable only by its owner or the owning organisation.
+2. The WebID profile document is retrievable as Turtle file via HTTP(S) request on the WebID URI. Use of `Accept: text/turtle` header is mandatory for the request.  
+3. The WebID profile document `must` contain:
+ * A `foaf:primaryTopic` from the WebID profile URI to the WebID.
+ * A statement whether the WebID is a `foaf:Person`, `foaf:Organisation` or `foaf:Agent`
+ * The modulus and exponent of the RSAPublicKey
+4. The WebID profile document `should` be public as in open access like the majority of websites. 
+5. The private key as well as the PKCS12 (.pfx,.p12) file `must` be kept in a secure location (normally password protected file or entrusted to a web browser).  
+6. The X.509 Certificate, which is part of the PKCS12 file `must` contain the WebID in the `subject alternative name` (SAN) field
+
+
+Note: The WebID profile document can contain any amount of additional information and extensions in the document. Some applications may require additional information. 
+
+# Setup
+
+## Public/Private Key Generation
+### Generation of the private and public key
+### Modulus and exponent
+
+## WebID and WebID profile document
+### Choose the URI
+### Create the Turtle document
+### Publish the document
+
+## Client Certificate
+### Generation of the PKCS12 file 
+### Browser installation
+
+# Usage and Validation
+
+## Retrieval of WebID
+
+`curl -H "Accept: text/turtle" "webid-uri"`
+
+## Syntax validation of WebID profile document (Turtle)
+
+## Content validation of WebID 
+
+## Testing of client certificate and secure connection
+http://id.myopenlink.net/ods/webid_demo.html 
+
+## Testing of authentication
+http://ods-qa.openlinksw.com/youid
+http://linkeddata.uriburner.com/sparql 
+
+
+# TODO
 ```
+openssl dgst -sha256 -sign ~/.ssh/$private_key  anyFile.txt  | openssl base64 -out anyFile.signed
+```
+
+
+
+# Background reading
+If you are interested in the basic technologies behind WebID and TLS, we recommend to read these documents as a starting point.
+
+## Linked Data and RDF 
+
+## Cryptography and Handshake
+* TLS, the successor of SSL: https://en.wikipedia.org/wiki/Transport_Layer_Security
+* The TLS handshake: https://en.wikipedia.org/wiki/Transport_Layer_Security#Client-authenticated_TLS_handshake 
+* PKCS12 Files (*.pfx;*.p12)
