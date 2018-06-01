@@ -53,12 +53,55 @@ Note: The WebID profile document can contain any amount of additional informatio
 
 ## Public/Private Key Generation
 ### Generation of the private and public key
+
+```
+openssl genpkey -algorith, RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
+openssl rsa -pubout -in private_key.pem -out public_key.pem
+```
+This will create two files, private_key.pem and public_key.pem
+
 ### Modulus and exponent
 
+To output the modulus and exponent, run
+```
+openssl rsa -pubin -inform PEM -text -noout < public.key
+```
 ## WebID and WebID profile document
 ### Choose the URI
+
+We currently recommend using github pages as a hosting service for your WebId, since it is freely available. 
+Your WebId will then be <YOUR_GITHUB_NAME>.github.io/webid.ttl#this (see example above)
+
 ### Create the Turtle document
+
+You can setup your basic turtle profile document as follows
+
+```
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix cert: <http://www.w3.org/ns/auth/cert#> .
+@prefix rdfs: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<> a foaf:PersonalProfileDocument ;
+   foaf:maker <#this> ;
+   foaf:primaryTopic <#this> .
+
+<#this> a foaf:Person ;
+   foaf:name "<YOUR_NAME>";
+   cert:key [ 
+       a cert:RSAPublicKey;
+       rdfs:label "made on 23 November 2011 on my laptop";
+       cert:modulus """<YOUR_PUBLIC_KEY_MODULUS>"""^^xsd:hexBinary;
+       cert:exponent <YOUR_PUBLIC_KEY_EXPONENT> ;
+      ] . 
+
+``` 
+
+Create a new file and name it `webid.ttl`. Post the code above and make sure to replace the sequences <YOUR_NAME>, <YOUR_PUBLIC_KEY_MODULUS> and <YOUR_PUBLIC_KEY_EXPONENT> with your respective information.
+
 ### Publish the document
+
+Create a new github repository named <YOUR_GITHUB_NAME>.github.io. Replace <YOUR_GITHUB_NAME> with your actual own github account name. Once the repository is created, load your `webid.ttl` to the repository root. After 30 to 60 seconds your WebId document will be accessible under <YOUR_GITHUB_NAME>.github.io/webid.ttl#this. You can verify this by running the URI in your browser.
 
 ## Client Certificate
 ### Generation of the PKCS12 file 
