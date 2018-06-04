@@ -202,6 +202,8 @@ This generates a new file `certificate.pfx` which can be uploaded to your browse
 
 ### Browser installation
 
+You can upload your `certificate.pfx` to your browser by using the UI provided by the browser of your choice. For Google Chrome for instnace go to Settings > Advanved > Manage Certificates and Import your certificate file.
+
 # Usage and Validation
 
 ## Retrieval of WebID
