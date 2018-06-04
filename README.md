@@ -144,7 +144,60 @@ Create a new github repository named <YOUR_GITHUB_NAME>.github.io. Replace <YOUR
 ## Client Certificate
 ### Generation of the PKCS12 file 
 
-https://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+To create a certificate, you first need to generate a certificate file (.cer) file using your private key and a config file. Create a new file and name it `cert_config.cnf`. Paste the following lines into your `cert_config.cnf` and adjust the values accordingly.
+
+``
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+req_extensions = v3_req
+distinguished_name = dn
+
+[ dn ]
+# Country Code
+C=DE
+# State
+ST=Saxonia
+# Citry
+L=Dresden    
+# Organization
+O=DBpedia
+# Organizational Unit
+OU=.
+# Email Address
+emailAddress=jan.forberg@hotmail.de
+# Name
+CN = Jan Forberg
+
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+
+[ alt_names ]
+# Web Id
+DNS = holycrab13.github.io/webid.ttl#this
+``
+
+Run the following command to use your private key `private_key.pem` and `cert_config.cnf` to generate a new file `cert.cer`.
+``
+openssl req -x509 -new -nodes -key private_key.pem -days 3650 -out cert.cer -config cert_config.cnf -extensions v3_req
+``
+
+You can validate the contents of `cert.cer` by running
+
+``
+openssl x509 -in cert.cer -text
+``
+
+Convert your new `cert.cer` to a PKCS12 file using your `private_key.pem` by running the following command.
+
+``
+openssl pkcs12 -export -out certificate.pfx -inkey private_key.pem -in cert.cer
+``
+
+This generates a new file `certificate.pfx` which can be uploaded to your browser.
 
 ### Browser installation
 
