@@ -177,7 +177,7 @@ subjectAltName = @alt_names
 
 [ alt_names ]
 # Web Id
-DNS = holycrab13.github.io/webid.ttl#this
+URI = holycrab13.github.io/webid.ttl#this
 ```
 
 Run the following command to use your private key `private_key.pem` and `cert_config.cnf` to generate a new file `cert.cer`.
