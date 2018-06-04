@@ -177,9 +177,10 @@ subjectAltName = @alt_names
 
 [ alt_names ]
 # Web Id
-URI = holycrab13.github.io/webid.ttl#this
+URI = "holycrab13.github.io/webid.ttl#this"
 ```
 
+Make sure to put your Web Id between quotes, otherwise the fragment identifier will be cropped automatically.
 Run the following command to use your private key `private_key.pem` and `cert_config.cnf` to generate a new file `cert.cer`.
 
 ```
