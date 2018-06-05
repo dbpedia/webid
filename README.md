@@ -115,7 +115,7 @@ A complete WebId Document can look like this:
    cert:key [ 
        a cert:RSAPublicKey;
        rdfs:label "made on 23 November 2011 on my laptop";
-       cert:modulus """00:97:8c:d2:45:ad:d1:1f:01:8d:32:1d:2a:96:d5:
+       cert:modulus "00:97:8c:d2:45:ad:d1:1f:01:8d:32:1d:2a:96:d5:
     e7:8b:fc:2d:e5:40:fc:2b:df:f1:a1:e4:6e:f3:c0:
     15:a5:85:51:55:d9:62:dc:c5:38:e7:bd:29:27:82:
     5b:2b:6f:d1:04:8d:de:7d:c2:b2:ac:db:b9:60:2d:
@@ -132,8 +132,8 @@ A complete WebId Document can look like this:
     bc:f5:58:f5:46:c8:20:45:fd:d5:d2:7b:1c:c1:e5:
     c3:fc:43:27:39:1d:87:27:a8:e4:22:f4:5e:0f:10:
     56:2a:90:88:63:a0:a9:3a:a3:d6:13:b5:ad:a1:a3:
-    f2:9b"""^^xsd:hexBinary;
-       cert:exponent 65537 ;
+    f2:9b"^^xsd:hexBinary;
+       cert:exponent "65537"^^xsd:integer;
       ] .
 ```
 
