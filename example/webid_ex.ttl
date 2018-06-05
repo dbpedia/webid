@@ -7,13 +7,45 @@
    foaf:maker <#this> ;
    foaf:primaryTopic <#this> .
 
-# resolves to
+# <> resolves to https://raw.githubusercontent.com/dbpedia/webid/master/example/webid_ex.ttl
 
 <#this> a foaf:Person ;
    foaf:name "Example ID";
    cert:key [ 
        a cert:RSAPublicKey;
-       rdfs:label "made on 23 November 2011 on my laptop";
-       cert:modulus "978CD245ADD11F018D321D2A96D5E78BFC2DE540FC2BDFF1A1E46EF3C015A5855155D962DCC538E7BD2927825B2B6FD1048DDE7DC2B2ACDBB9602D87EAA03461A5AEA48DE59709DE9097070146BA8AA3D436780FEA7F328DD3C8DF0D7B359E38B9C2EC37EE2DAD309CDC878FF2CE4DDA48D683C122894D2D892069C77C72FFF977C10BFCE614E243E5B4C919DE6DE5E0D26BFAE9E15385A420E31CDD527388B31B7AA4CAB3B4753F00F7BB58AC4472D5D129B325A539EC02DF5C660311030C452BE05DBB2AF52C0B2D6CBC3843EF0DD87BBCF558F546C82045FDD5D27B1CC1E5C3FC4327391D8727A8E422F45E0F10562A908863A0A93AA3D613B5ADA1A3F29B"^^xsd:hexBinary;
+       rdfs:label """made with 'openssl rsa -pubin -inform PEM -text -noout < public_key.pem'   """;
+       cert:modulus """
+       00:bd:6b:c9:2e:b6:ce:2a:70:13:cc:86:e1:82:9a:
+    34:d2:b6:95:94:73:42:8a:00:3a:8f:bb:a8:a3:db:
+    ff:4c:db:a3:3f:02:9b:a8:af:1f:1f:6c:e6:be:aa:
+    15:4e:09:53:d8:38:82:9e:1c:9e:4a:c0:92:c7:bc:
+    1c:1a:ab:2e:e2:f5:73:ab:ee:19:ba:3b:10:3b:54:
+    c4:36:c1:c8:73:30:f7:db:fb:11:8c:59:b0:db:26:
+    6b:47:11:f4:ee:4b:eb:56:48:ab:0b:2f:0d:68:9a:
+    55:b7:6a:7e:92:41:81:6a:5f:68:f8:02:69:2a:33:
+    79:75:bc:9a:6e:43:f4:21:4c:d9:7e:4e:6c:78:50:
+    26:03:7e:dd:86:97:b4:8f:a6:fa:ae:5f:73:86:8a:
+    e9:55:38:40:53:1e:0e:0b:28:b6:c2:2c:5c:4d:4b:
+    38:22:34:69:58:39:ab:f7:8c:1b:37:c2:34:bb:e4:
+    83:19:eb:78:0a:72:53:6e:36:51:a0:84:46:d2:20:
+    8b:28:42:50:e1:c1:2f:5a:33:a1:28:9a:31:c9:4b:
+    e6:b0:50:36:8c:f6:45:62:6a:30:9e:cc:16:f5:c1:
+    a5:d3:0b:ba:ca:e7:57:c0:88:5c:c5:4e:0c:b9:f7:
+    ce:0c:83:ee:fc:09:02:e3:a4:b7:5f:d4:cb:47:9e:
+    a6:2f"""^^xsd:hexBinary;
+       cert:exponent "65537"^^xsd:integer;
+      ] ;
+   cert:key [ 
+       a cert:RSAPublicKey;
+       rdfs:label """ same as above, but with : and white space removed   """;
+       cert:modulus """00bd6bc92eb6ce2a7013cc86e1829a34d2b6959473428a003a8fbba8a3dbff4cdba33f029ba8af1f1f6ce6beaa154e0953d838829e1c9e4ac092c7bc1c1aab2ee2f573abee19ba3b103b54c436c1c87330f7dbfb118c59b0db266b4711f4ee4beb5648ab0b2f0d689a55b76a7e9241816a5f68f802692a337975bc9a6e43f4214cd97e4e6c785026037edd8697b48fa6faae5f73868ae9553840531e0e0b28b6c22c5c4d4b382234695839abf78c1b37c234bbe48319eb780a72536e3651a08446d2208b284250e1c12f5a33a1289a31c94be6b050368cf645626a309ecc16f5c1a5d30bbacae757c0885cc54e0cb9f7ce0c83eefc0902e3a4b75fd4cb479ea62f"""^^xsd:hexBinary;
+       cert:exponent "65537"^^xsd:integer;
+      ] ;
+
+   cert:key [ 
+       a cert:RSAPublicKey;
+       rdfs:label """made with ' openssl rsa -noout -modulus -in private_key.pem'   """;
+       cert:modulus "BD6BC92EB6CE2A7013CC86E1829A34D2B6959473428A003A8FBBA8A3DBFF4CDBA33F029BA8AF1F1F6CE6BEAA154E0953D838829E1C9E4AC092C7BC1C1AAB2EE2F573ABEE19BA3B103B54C436C1C87330F7DBFB118C59B0DB266B4711F4EE4BEB5648AB0B2F0D689A55B76A7E9241816A5F68F802692A337975BC9A6E43F4214CD97E4E6C785026037EDD8697B48FA6FAAE5F73868AE9553840531E0E0B28B6C22C5C4D4B382234695839ABF78C1B37C234BBE48319EB780A72536E3651A08446D2208B284250E1C12F5A33A1289A31C94BE6B050368CF645626A309ECC16F5C1A5D30BBACAE757C0885CC54E0CB9F7CE0C83EEFC0902E3A4B75FD4CB479EA62F"^^xsd:hexBinary;
        cert:exponent "65537"^^xsd:integer;
       ] .
+

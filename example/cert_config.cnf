@@ -1,0 +1,31 @@
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+req_extensions = v3_req
+distinguished_name = dn
+
+[ dn ]
+# Country Code
+C=DE
+# State
+ST=Saxonia
+# Citry
+L=Dresden    
+# Organization
+O=DBpedia
+# Organizational Unit
+OU=.
+# Email Address
+emailAddress=example@example.org
+# Name
+CN = Example ID
+
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+
+[ alt_names ]
+# Web Id
+URI = "https://raw.githubusercontent.com/dbpedia/webid/master/example/webid_ex.ttl"
