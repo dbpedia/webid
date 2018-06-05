@@ -64,7 +64,7 @@ This will create two files, private_key.pem and public_key.pem
 
 To output the modulus and exponent, run
 ```
-openssl rsa -pubin -inform PEM -text -noout < public.key
+openssl rsa -pubin -inform PEM -text -noout < public_key.pem
 ```
 
 To print the modulus without separators for copy/paste into your WebId document, run
