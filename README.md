@@ -66,6 +66,12 @@ To output the modulus and exponent, run
 ```
 openssl rsa -pubin -inform PEM -text -noout < public.key
 ```
+
+To print the modulus without separators for copy/paste into your WebId document, run
+```
+openssl rsa -noout -modulus -in private_key.pem
+```
+
 ## WebID and WebID profile document
 ### Choose the URI
 
@@ -115,24 +121,7 @@ A complete WebId Document can look like this:
    cert:key [ 
        a cert:RSAPublicKey;
        rdfs:label "made on 23 November 2011 on my laptop";
-       cert:modulus "00:97:8c:d2:45:ad:d1:1f:01:8d:32:1d:2a:96:d5:
-    e7:8b:fc:2d:e5:40:fc:2b:df:f1:a1:e4:6e:f3:c0:
-    15:a5:85:51:55:d9:62:dc:c5:38:e7:bd:29:27:82:
-    5b:2b:6f:d1:04:8d:de:7d:c2:b2:ac:db:b9:60:2d:
-    87:ea:a0:34:61:a5:ae:a4:8d:e5:97:09:de:90:97:
-    07:01:46:ba:8a:a3:d4:36:78:0f:ea:7f:32:8d:d3:
-    c8:df:0d:7b:35:9e:38:b9:c2:ec:37:ee:2d:ad:30:
-    9c:dc:87:8f:f2:ce:4d:da:48:d6:83:c1:22:89:4d:
-    2d:89:20:69:c7:7c:72:ff:f9:77:c1:0b:fc:e6:14:
-    e2:43:e5:b4:c9:19:de:6d:e5:e0:d2:6b:fa:e9:e1:
-    53:85:a4:20:e3:1c:dd:52:73:88:b3:1b:7a:a4:ca:
-    b3:b4:75:3f:00:f7:bb:58:ac:44:72:d5:d1:29:b3:
-    25:a5:39:ec:02:df:5c:66:03:11:03:0c:45:2b:e0:
-    5d:bb:2a:f5:2c:0b:2d:6c:bc:38:43:ef:0d:d8:7b:
-    bc:f5:58:f5:46:c8:20:45:fd:d5:d2:7b:1c:c1:e5:
-    c3:fc:43:27:39:1d:87:27:a8:e4:22:f4:5e:0f:10:
-    56:2a:90:88:63:a0:a9:3a:a3:d6:13:b5:ad:a1:a3:
-    f2:9b"^^xsd:hexBinary;
+       cert:modulus "978CD245ADD11F018D321D2A96D5E78BFC2DE540FC2BDFF1A1E46EF3C015A5855155D962DCC538E7BD2927825B2B6FD1048DDE7DC2B2ACDBB9602D87EAA03461A5AEA48DE59709DE9097070146BA8AA3D436780FEA7F328DD3C8DF0D7B359E38B9C2EC37EE2DAD309CDC878FF2CE4DDA48D683C122894D2D892069C77C72FFF977C10BFCE614E243E5B4C919DE6DE5E0D26BFAE9E15385A420E31CDD527388B31B7AA4CAB3B4753F00F7BB58AC4472D5D129B325A539EC02DF5C660311030C452BE05DBB2AF52C0B2D6CBC3843EF0DD87BBCF558F546C82045FDD5D27B1CC1E5C3FC4327391D8727A8E422F45E0F10562A908863A0A93AA3D613B5ADA1A3F29B"^^xsd:hexBinary;
        cert:exponent "65537"^^xsd:integer;
       ] .
 ```
