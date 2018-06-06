@@ -64,7 +64,7 @@ Note: The WebID profile document can contain any amount of additional informatio
 
 ```
 # This will create two files in PEM format, private_key.pem and public_key.pem
-openssl genpkey -algorith, RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
+openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
 openssl rsa -pubout -in private_key.pem -out public_key.pem
 ```
 
