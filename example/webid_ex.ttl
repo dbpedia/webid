@@ -35,12 +35,12 @@
 #    a6:2f"""^^xsd:hexBinary;
 #       cert:exponent "65537"^^xsd:integer;
 #      ] .
-#   cert:key [ 
-#       a cert:RSAPublicKey;
-#       rdfs:label """ same as above, but with : and white space removed   """;
-#       cert:modulus """00bd6bc92eb6ce2a7013cc86e1829a34d2b6959473428a003a8fbba8a3dbff4cdba33f029ba8af1f1f6ce6beaa154e0953d838829e1c9e4ac092c7bc1c1aab2ee2f573abee19ba3b103b54c436c1c87330f7dbfb118c59b0db266b4711f4ee4beb5648ab0b2f0d689a55b76a7e9241816a5f68f802692a337975bc9a6e43f4214cd97e4e6c785026037edd8697b48fa6faae5f73868ae9553840531e0e0b28b6c22c5c4d4b382234695839abf78c1b37c234bbe48319eb780a72536e3651a08446d2208b284250e1c12f5a33a1289a31c94be6b050368cf645626a309ecc16f5c1a5d30bbacae757c0885cc54e0cb9f7ce0c83eefc0902e3a4b75fd4cb479ea62f"""^^xsd:hexBinary;
-#       cert:exponent "65537"^^xsd:integer;
-#      ] .
+   cert:key [ 
+       a cert:RSAPublicKey;
+       rdfs:label """ same as above, but with : and white space removed   """;
+       cert:modulus """00bd6bc92eb6ce2a7013cc86e1829a34d2b6959473428a003a8fbba8a3dbff4cdba33f029ba8af1f1f6ce6beaa154e0953d838829e1c9e4ac092c7bc1c1aab2ee2f573abee19ba3b103b54c436c1c87330f7dbfb118c59b0db266b4711f4ee4beb5648ab0b2f0d689a55b76a7e9241816a5f68f802692a337975bc9a6e43f4214cd97e4e6c785026037edd8697b48fa6faae5f73868ae9553840531e0e0b28b6c22c5c4d4b382234695839abf78c1b37c234bbe48319eb780a72536e3651a08446d2208b284250e1c12f5a33a1289a31c94be6b050368cf645626a309ecc16f5c1a5d30bbacae757c0885cc54e0cb9f7ce0c83eefc0902e3a4b75fd4cb479ea62f"""^^xsd:hexBinary;
+       cert:exponent "65537"^^xsd:integer;
+      ] ;
 
    cert:key [ 
        a cert:RSAPublicKey;
