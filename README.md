@@ -87,10 +87,10 @@ Before publishing your WebID, think about the URI and the hosting space. Differe
 Basically, you will need some webspace to put a file there. The URL of this file will make up the first part of your WebID (plus `#this`). There are actually many, many, many ways to do it. The main benefit of using just a Turtle/RDF file are that you just need to publish one file (file publishing is supported by many web services). Turtle allows to use the file URL as `@base` for all the relative URIs described, see https://www.w3.org/TR/turtle/#sec-intro . 
 The three general ways to choose an URI are:
 * deploy file in a provided environment (e.g. Github pages)
-* deploy file on a webserver with own domain or subdomain on your own server
+* deploy file on a webserver with own domain or subdomain on your own server (See)
 * use of more sophisticated Semantic Web tools (see list at end)
 
-  
+ Note that querying the URI with `#this` or without should return the same result with HTTP as anything behind `#` is not sent to the server. However, the URI with `#this` at the end is your WebID and without the .ttl file. 
 
 #### Github.io
 A simple way to get a WebID is using Github.io Pages as a free hosting service. 
@@ -99,10 +99,14 @@ GitHub page setup is explained here: https://pages.github.com/
 Here is the repo of Jan: https://github.com/holycrab13/holycrab13.github.io leading to https://holycrab13.github.io/webid.ttl
 
 Note that Github pages sets the `Content-Type` HTTP response header correctly to `text/turtle`, but needs 3-5 minutes to update on commit/push. See the header here:
-`curl -I https://holycrab13.github.io/webid.ttl`
+`curl -I "https://holycrab13.github.io/webid.ttl#this"`
 
-#### Own webspace with Apache and .htaccess
-TODO to publish on your own webspace configure Apache and create add the turtle mime-type
+#### Apache2 
+Create a regular virtualhost for the domain and put the file there. since `text/turtle` is normally registered as mimetype under `/etc/mime.types` Apache2 will automatically recognise it. Otherwise you will need to add `AddType text/turtle .ttl` to the .htaccess or virtualhost config.
+Example:
+`curl -I http://kurzum.net/webid.ttl`
+
+
 
 ### Create the WebID profile document in Turtle syntax
 
@@ -122,7 +126,7 @@ Create a new file and name it `webid.ttl`. Make sure to replace the sequences <N
    foaf:name "<YOUR_NAME>";
    cert:key [ 
        a cert:RSAPublicKey;
-       rdfs:label "<this field is for you to label your key>";
+       rdfs:label "<THIS FIELD IS FOR YOUR LABEL>";
        cert:modulus "<PUBLIC_KEY_MODULUS>"^^xsd:hexBinary;
        cert:exponent "<PUBLIC_KEY_EXPONENT>"^^xsd:integer ;
       ] . 
@@ -133,7 +137,8 @@ Create a new file and name it `webid.ttl`. Make sure to replace the sequences <N
 
 A complete WebId Document can look like this:
 
-```@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+```
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix cert: <http://www.w3.org/ns/auth/cert#> .
 @prefix rdfs: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -152,9 +157,19 @@ A complete WebId Document can look like this:
       ] .
 ```
 
-### Publish the document
+### Publish properly and check
+*NOTE*: publishing means uploading the webid.ttl file to the web space as described before. In order to verify:
 
-Create a new github repository named <YOUR_GITHUB_NAME>.github.io. Replace <YOUR_GITHUB_NAME> with your actual own github account name. Once the repository is created, load your `webid.ttl` to the repository root. After 30 to 60 seconds your WebId document will be accessible under <YOUR_GITHUB_NAME>.github.io/webid.ttl#this. You can verify this by running the URI in your browser.
+#### Check HTTP header 
+`curl -I -H "Accept: text/turtle" "webid-uri"` should return `HTTP/1.1 200 OK` and `Content-Type: text/turtle` ,
+
+#### Check Turtle syntax
+* Ubuntu shell: `rapper -c -i turtle "webid-uri"`
+* Online copy/paste: http://ttl.summerofcode.be/
+* Online URI Validator:
+** http://linkeddata.uriburner.com:8000/vapour (check Turtle)
+** http://www.easyrdf.org/converter 
+
 
 ## Client Certificate
 ### Generation of the PKCS12 file 
@@ -229,9 +244,7 @@ You can upload your `certificate.pfx` to your browser via the settings
 
 # Usage and Validation
 
-## Retrieval of WebID
 
-`curl -H "Accept: text/turtle" "webid-uri"`
 
 ## Syntax validation of WebID profile document (Turtle)
 
