@@ -21,19 +21,26 @@ WebID profile document or WebID file - The WebID profile document is the file th
 
 Client Certifcate or PKCS12 File (*.pfx;*.p12) - The file that contains an X.509 certificate along with the private key to establish the secure connection and authentification. 
 
-# Example
-This is Jan's WebID: http://holycrab13.github.io/webid.ttl#this
+# Example 1
+This is Jan's WebID: `http://holycrab13.github.io/webid.ttl#this`
 If you open it in a browser or `curl` it the `#this` is ignored and the full turtle file is retrieved. In the turtle file you can find a section with additional information about Jan as well as his public key:
+* HTTP retrieval: `curl -H "Accept: text/turtle" "http://holycrab13.github.io/webid.ttl#this"`
+* Retrival and RDF parsing : `rapper -i turtle http://holycrab13.github.io/webid.ttl#this`
 ```
+# Note that <#this> is a relative path for the webid resolving to the full URI once the RDF is parsed.
 <#this> a foaf:Person ;
    foaf:name "Jan Forberg";
    cert:key [ 
        a cert:RSAPublicKey;
        rdfs:label "made on 23 November 2011 on my laptop";
-       cert:modulus """00:[....]9b"""^^xsd:hexBinary;
-       cert:exponent 65537 ;
+       cert:modulus "978CD24[...]3F29B"^^xsd:hexBinary;
+       cert:exponent "65537"^^xsd:integer;
       ] .
 ``` 
+
+# Example 2
+We prepared a full example in the example folder in this repository: https://github.com/dbpedia/webid/tree/master/example
+Note that this also contains the files `private_key.pem` and `certificate.pfx` , which are normally *not* public. 
 
 # The Rules of WebID
 1. The WebID profile document is editable only by its owner or the owning organisation.
@@ -53,34 +60,43 @@ Note: The WebID profile document can contain any amount of additional informatio
 
 ## Public/Private Key Generation
 ### Generation of the private and public key
+#### Ubuntu (openssl)
 
 ```
+# This will create two files in PEM format, private_key.pem and public_key.pem
 openssl genpkey -algorith, RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
 openssl rsa -pubout -in private_key.pem -out public_key.pem
 ```
-This will create two files, private_key.pem and public_key.pem
 
 ### Modulus and exponent
-
-To output the modulus and exponent, run
+For the WebID, you will need the modulus and exponent of your public_key.
+#### Ubuntu (openssl)
 ```
-openssl rsa -pubin -inform PEM -text -noout < public_key.pem
-```
-
-To print the modulus without separators for copy/paste into your WebId document, run
-```
+# Note that the public key was generated from the private key in the first place. 
+# To print the modulus without separators for copy/paste into your WebId document, run
 openssl rsa -noout -modulus -in private_key.pem
+# This command will print out modulus (ignore, wrong format) and exponent of your public key. 
+openssl rsa -pubin -inform PEM -text -noout < public_key.pem
+
 ```
 
 ## WebID and WebID profile document
 ### Choose the URI
+Before publishing your WebID, think about the URI and the hosting space. Different options are documented below. 
+Basically, you will need some webspace to put a file there. The URL of this file will make up the first part of your WebID (plus `#this`). There are actually many, many, many ways to do it. The main benefit of using just a Turtle/RDF file are, that you just need to publish one file. Turtle allows to use the file URL as `@base` for all the relative URIs described, see https://www.w3.org/TR/turtle/#sec-intro .   
 
-We currently recommend using github pages as a hosting service for your WebId, since it is freely available. 
-Your WebId will then be <YOUR_GITHUB_NAME>.github.io/webid.ttl#this (see example above)
+#### Github.io
+A simple way to get a WebID is using Github.io Pages as a free hosting service. 
+GitHub page setup is explained here: https://pages.github.com/
+(Basically it is creating a repository with the name `${username}.github.io` and creating a `webid.ttl` there, your WebId will then be <YOUR_GITHUB_NAME>.github.io/webid.ttl#this (see example above).
+Here is the repo of Jan: https://github.com/holycrab13/holycrab13.github.io leading to https://holycrab13.github.io/webid.ttl
 
-### Create the Turtle document
+Note that Github pages sets the `Content-Type` HTTP response header correctly to `text/turtle`, but needs 3-5 minutes to update on commit/push. See the header here:
+`curl -I https://holycrab13.github.io/webid.ttl`
 
-You can setup your basic turtle profile document as follows
+### Create the WebID profile document in Turtle syntax
+
+Create a new file and name it `webid.ttl`. Make sure to replace the sequences <YOUR_NAME>, <YOUR_PUBLIC_KEY_MODULUS> and <YOUR_PUBLIC_KEY_EXPONENT> with your respective information.
 
 ```
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -103,7 +119,7 @@ You can setup your basic turtle profile document as follows
 
 ``` 
 
-Create a new file and name it `webid.ttl`. Post the code above and make sure to replace the sequences <YOUR_NAME>, <YOUR_PUBLIC_KEY_MODULUS> and <YOUR_PUBLIC_KEY_EXPONENT> with your respective information.
+
 
 A complete WebId Document can look like this:
 
