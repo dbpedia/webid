@@ -25,7 +25,7 @@ Client Certifcate or PKCS12 File (*.pfx;*.p12) - The file that contains an X.509
 This is Jan's WebID: `http://holycrab13.github.io/webid.ttl#this`
 If you open it in a browser or `curl` it the `#this` is ignored and the full turtle file is retrieved. In the turtle file you can find a section with additional information about Jan as well as his public key:
 * HTTP retrieval: `curl -H "Accept: text/turtle" "http://holycrab13.github.io/webid.ttl#this"`
-* Retrival and RDF parsing : `rapper -i turtle http://holycrab13.github.io/webid.ttl#this`
+* Retrieval and RDF parsing : `rapper -i turtle http://holycrab13.github.io/webid.ttl#this`
 ```
 # Note that <#this> is a relative path for the webid resolving to the full URI once the RDF is parsed.
 <#this> a foaf:Person ;
@@ -58,14 +58,14 @@ Note: The WebID profile document can contain any amount of additional informatio
 
 # Setup
 
-## Public/Private Key Generation
-### Generation of the private and public key
+## Public/Private Key
+### Generation
 #### Ubuntu (openssl)
 
 ```
-# This will create two files in PEM format, private_key.pem and public_key.pem
-openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
-openssl rsa -pubout -in private_key.pem -out public_key.pem
+# This will create two files in PEM format, private_key_webid.pem and public_key_webid.pem
+openssl genpkey -algorithm RSA -out private_key_webid.pem -pkeyopt rsa_keygen_bits:2048
+openssl rsa -pubout -in private_key_webid.pem -out public_key_webid.pem
 ```
 
 ### Modulus and exponent
@@ -74,16 +74,22 @@ For the WebID, you will need the modulus and exponent of your public_key.
 ```
 # Note that the public key was generated from the private key in the first place. 
 # To print the modulus without separators for copy/paste into your WebId document, run
-openssl rsa -noout -modulus -in private_key.pem
-# This command will print out modulus (ignore, wrong format) and exponent of your public key. 
-openssl rsa -pubin -inform PEM -text -noout < public_key.pem
+openssl rsa -noout -modulus -in private_key_webid.pem
+# This command will print out the exponent of your public key. 
+# The modulus printed out here is essentially the same, but in a different format (remove whitespace, newlines, : and 00 at the front). 
+openssl rsa -pubin -inform PEM -text -noout < public_key_webid.pem
 
 ```
 
 ## WebID and WebID profile document
 ### Choose the URI
 Before publishing your WebID, think about the URI and the hosting space. Different options are documented below. 
-Basically, you will need some webspace to put a file there. The URL of this file will make up the first part of your WebID (plus `#this`). There are actually many, many, many ways to do it. The main benefit of using just a Turtle/RDF file are, that you just need to publish one file. Turtle allows to use the file URL as `@base` for all the relative URIs described, see https://www.w3.org/TR/turtle/#sec-intro . 
+Basically, you will need some webspace to put a file there. The URL of this file will make up the first part of your WebID (plus `#this`). There are actually many, many, many ways to do it. The main benefit of using just a Turtle/RDF file are that you just need to publish one file (file publishing is supported by many web services). Turtle allows to use the file URL as `@base` for all the relative URIs described, see https://www.w3.org/TR/turtle/#sec-intro . 
+The three general ways to choose an URI are:
+* deploy file in a provided environment (e.g. Github pages)
+* deploy file on a webserver with own domain or subdomain on your own server
+* use of more sophisticated Semantic Web tools (see list at end)
+
   
 
 #### Github.io
@@ -100,7 +106,7 @@ TODO to publish on your own webspace configure Apache and create add the turtle 
 
 ### Create the WebID profile document in Turtle syntax
 
-Create a new file and name it `webid.ttl`. Make sure to replace the sequences <YOUR_NAME>, <YOUR_PUBLIC_KEY_MODULUS> and <YOUR_PUBLIC_KEY_EXPONENT> with your respective information.
+Create a new file and name it `webid.ttl`. Make sure to replace the sequences <NAME>, <PUBLIC_KEY_MODULUS> and <YOUR_PUBLIC_KEY_EXPONENT> with your respective information.
 
 ```
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -117,8 +123,8 @@ Create a new file and name it `webid.ttl`. Make sure to replace the sequences <Y
    cert:key [ 
        a cert:RSAPublicKey;
        rdfs:label "<this field is for you to label your key>";
-       cert:modulus """<YOUR_PUBLIC_KEY_MODULUS>"""^^xsd:hexBinary;
-       cert:exponent <YOUR_PUBLIC_KEY_EXPONENT> ;
+       cert:modulus "<PUBLIC_KEY_MODULUS>"^^xsd:hexBinary;
+       cert:exponent "<PUBLIC_KEY_EXPONENT>"^^xsd:integer ;
       ] . 
 
 ``` 
