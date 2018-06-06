@@ -171,10 +171,15 @@ A complete WebId Document can look like this:
 ** http://www.easyrdf.org/converter 
 
 
-## Client Certificate
-### Generation of the PKCS12 file 
+## PKCS12 file
+In cryptography, PKCS #12 defines an archive file format for storing many cryptography objects as a single file. It is commonly used to bundle a private key with its X.509 certificate (Source: https://en.wikipedia.org/wiki/PKCS_12).
 
-To create a certificate, you first need to generate a certificate file (.cer) file using your private key and a config file. Create a new file and name it `cert_config.cnf`. Paste the following lines into your `cert_config.cnf` and adjust the values accordingly.
+Private key and X.509 together are required for Client Certificate Authorization, whereas the private key allows you to establish a secure connection (in this case TLS) and the X.509 certificate allows to authenticate your identity. The connection between these two is promed by signing the X.509 certificate with the private key. 
+
+### X.509 certificate with WebID in Subject Alternative Name
+
+The certificate file (.cer) file is created using your private key and a config file. Below is a sample config file (copy and paste to `cert_config.cnf`) and addapt each line.
+*The most important part is the URI in alt_names* 
 
 ```
 [req]
@@ -207,11 +212,12 @@ subjectAltName = @alt_names
 
 [ alt_names ]
 # Web Id
+# Make sure to put your Web Id between quotes, otherwise the fragment identifier will be cropped automatically.
 URI = "https://holycrab13.github.io/webid.ttl#this"
 ```
 
-Make sure to put your Web Id between quotes, otherwise the fragment identifier will be cropped automatically.
-Run the following command to use your private key `private_key.pem` and `cert_config.cnf` to generate a new file `cert.cer`.
+
+Run the following command to use your private key `private_key_webid.pem` and `cert_config.cnf` to generate a new file `cert.cer`.
 
 ```
 openssl req -x509 -new -nodes -key private_key.pem -days 3650 -out cert.cer -config cert_config.cnf -extensions v3_req
@@ -223,13 +229,17 @@ You can validate the contents of `cert.cer` by running
 openssl x509 -in cert.cer -text
 ```
 
-Convert your new `cert.cer` to a PKCS12 file using your `private_key.pem` by running the following command.
+### PKCS 12 file (.pfx or .p12)
+
+Bundle your new `cert.cer` to a PKCS12 file including your `private_key.pem` by running the following command:
 
 ```
 openssl pkcs12 -export -out certificate.pfx -inkey private_key.pem -in cert.cer
 ```
 
-This generates a new file `certificate.pfx` which can be uploaded to your browser.
+This generates a new file `certificate.pfx`. 
+*Security Notice*: the file contains the private key. Keep it a secret and entrust it only to reliable applications such as your browser, `curl` or other software that should act on your behalf (like your browser loging in for you). 
+
 
 ### Browser installation
 
@@ -242,13 +252,13 @@ You can upload your `certificate.pfx` to your browser via the settings
  * https://chrome.google.com/webstore/detail/openlink-youid/kbepkemknbihgdmdnfainhmiidoblhee?hl=en
  * https://addons.mozilla.org/en-US/firefox/addon/openlink-youid-ff/
 
-# Usage and Validation
+# Validation 
 
-
-
-## Syntax validation of WebID profile document (Turtle)
+We assume that HTTP Header and Turtle syntax have been checked before (see above). This part outlines additional validation to see whether everything is working. 
 
 ## Content validation of WebID 
+TODO shacl 
+
 
 ## Testing of client certificate and secure connection
 http://id.myopenlink.net/ods/webid_demo.html 
@@ -274,3 +284,4 @@ If you are interested in the basic technologies behind WebID and TLS, we recomme
 * TLS, the successor of SSL: https://en.wikipedia.org/wiki/Transport_Layer_Security
 * The TLS handshake: https://en.wikipedia.org/wiki/Transport_Layer_Security#Client-authenticated_TLS_handshake 
 * PKCS12 Files (*.pfx;*.p12)
+ 
