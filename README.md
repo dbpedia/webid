@@ -212,7 +212,14 @@ This generates a new file `certificate.pfx` which can be uploaded to your browse
 
 ### Browser installation
 
-You can upload your `certificate.pfx` to your browser by using the UI provided by the browser of your choice. For Google Chrome for instnace go to Settings > Advanved > Manage Certificates and Import your certificate file.
+You can upload your `certificate.pfx` to your browser via the settings
+
+* Google Chrome: go to Settings > Advanced > Manage Certificates and Import your certificate file.
+* Firefox: go to Preferences > Privacy & Security > Certificates (at bottom) > View Certifiates
+
+ Note: some browsers need a restart. There are plugins that let you switch between webids
+ * https://chrome.google.com/webstore/detail/openlink-youid/kbepkemknbihgdmdnfainhmiidoblhee?hl=en
+ * https://addons.mozilla.org/en-US/firefox/addon/openlink-youid-ff/
 
 # Usage and Validation
 
