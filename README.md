@@ -83,7 +83,8 @@ openssl rsa -pubin -inform PEM -text -noout < public_key.pem
 ## WebID and WebID profile document
 ### Choose the URI
 Before publishing your WebID, think about the URI and the hosting space. Different options are documented below. 
-Basically, you will need some webspace to put a file there. The URL of this file will make up the first part of your WebID (plus `#this`). There are actually many, many, many ways to do it. The main benefit of using just a Turtle/RDF file are, that you just need to publish one file. Turtle allows to use the file URL as `@base` for all the relative URIs described, see https://www.w3.org/TR/turtle/#sec-intro .   
+Basically, you will need some webspace to put a file there. The URL of this file will make up the first part of your WebID (plus `#this`). There are actually many, many, many ways to do it. The main benefit of using just a Turtle/RDF file are, that you just need to publish one file. Turtle allows to use the file URL as `@base` for all the relative URIs described, see https://www.w3.org/TR/turtle/#sec-intro . 
+  
 
 #### Github.io
 A simple way to get a WebID is using Github.io Pages as a free hosting service. 
@@ -93,6 +94,9 @@ Here is the repo of Jan: https://github.com/holycrab13/holycrab13.github.io lead
 
 Note that Github pages sets the `Content-Type` HTTP response header correctly to `text/turtle`, but needs 3-5 minutes to update on commit/push. See the header here:
 `curl -I https://holycrab13.github.io/webid.ttl`
+
+#### Own webspace with Apache and .htaccess
+TODO to publish on your own webspace configure Apache and create add the turtle mime-type
 
 ### Create the WebID profile document in Turtle syntax
 
@@ -112,7 +116,7 @@ Create a new file and name it `webid.ttl`. Make sure to replace the sequences <Y
    foaf:name "<YOUR_NAME>";
    cert:key [ 
        a cert:RSAPublicKey;
-       rdfs:label "made on 23 November 2011 on my laptop";
+       rdfs:label "<this field is for you to label your key>";
        cert:modulus """<YOUR_PUBLIC_KEY_MODULUS>"""^^xsd:hexBinary;
        cert:exponent <YOUR_PUBLIC_KEY_EXPONENT> ;
       ] . 
