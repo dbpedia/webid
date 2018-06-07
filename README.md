@@ -158,17 +158,19 @@ A complete WebId Document can look like this:
 ```
 
 ### Publish properly and check
-*NOTE*: publishing means uploading the webid.ttl file to the web space as described before. In order to verify:
+*NOTE*: publishing means uploading the webid.ttl file to the web space as described before. 
 
 #### Check HTTP header 
-`curl -I -H "Accept: text/turtle" "webid-uri"` should return `HTTP/1.1 200 OK` and `Content-Type: text/turtle` ,
+`curl -I -L -H "Accept: text/turtle" "webid-uri"` should return either: 
+* `HTTP/*.* 200 OK` and `Content-Type: text/turtle` ,
+* `HTTP/*.* 30X` (a redirect) and give a `Location: ` with the actual file (HTTP redirect) 
 
 #### Check Turtle syntax
 * Ubuntu shell: `rapper -c -i turtle "webid-uri"`
 * Online copy/paste: http://ttl.summerofcode.be/
 * Online URI Validator:
-** http://linkeddata.uriburner.com:8000/vapour (check Turtle)
-** http://www.easyrdf.org/converter 
+ * http://linkeddata.uriburner.com:8000/vapour (check Turtle and also HTTP Header)
+ * http://www.easyrdf.org/converter 
 
 
 ## PKCS12 file
