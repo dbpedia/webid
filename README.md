@@ -185,7 +185,7 @@ Private key and X.509 together are required for Client Certificate Authorization
 
 ### X.509 certificate with WebID in Subject Alternative Name
 
-The certificate file (.cer) file is created using your private key and a config file. Below is a sample config file (copy and paste to `cert_config.cnf`) and addapt each line.
+The certificate file (.cer) file is created using your private key and a config file. Below is a sample config file (copy and paste to `cert.conf`) and addapt each line.
 *The most important part is the URI in alt_names* 
 
 ```
@@ -224,10 +224,10 @@ URI = "https://holycrab13.github.io/webid.ttl#this"
 ```
 
 
-Run the following command to use your private key `private_key_webid.pem` and `cert_config.cnf` to generate a new file `cert.cer`.
+Run the following command to use your private key `private_key_webid.pem` and `cert.config` to generate a new file `cert.cer`.
 
 ```
-openssl req -x509 -new -nodes -key private_key.pem -days 3650 -out cert.cer -config cert_config.cnf -extensions v3_req
+openssl req -x509 -new -nodes -key private_key_webid.pem -days 3650 -out cert.cer -config cert.config -extensions v3_req
 ```
 
 You can validate the contents of `cert.cer` by running
@@ -238,10 +238,10 @@ openssl x509 -in cert.cer -text
 
 ### PKCS 12 file (.pfx or .p12)
 
-Bundle your new `cert.cer` to a PKCS12 file including your `private_key.pem` by running the following command:
+Bundle your new `cert.cer` to a PKCS12 file including your `private_key_webid.pem` by running the following command:
 
 ```
-openssl pkcs12 -export -out certificate.pfx -inkey private_key.pem -in cert.cer
+openssl pkcs12 -export -out certificate.pfx -inkey private_key_webid.pem -in cert.cer
 ```
 
 This generates a new file `certificate.pfx`. 
