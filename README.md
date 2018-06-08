@@ -3,7 +3,8 @@ WebID Creation and Validation (Tutorial, Tools, Best practices)
 
 # Authors
 Jan Forberg and Sebastian Hellmann, DBpedia and KILT Competence Center @ InfAI
-Licensed under [https://creativecommons.org/licenses/by/3.0/ CC-BY]  © 2018
+License [CC-BY](https://creativecommons.org/licenses/by/3.0/)  © 2018
+All feedback welcome [(Issue tracker)](https://github.com/dbpedia/webid/issues).
 
 # Why WebID?
 WebID is a novel way to identify and authenticate users and organisations on the Web with established methods. The main advantages are:
