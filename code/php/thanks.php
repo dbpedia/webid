@@ -13,7 +13,7 @@ echo "Preparing Database...\n";
 
 
 $db = new SQLite3('data/webid.db');
-$db->exec('CREATE TABLE IF NOT EXISTS comments(webid TEXT, message TEXT)');
+$db->exec('CREATE TABLE IF NOT EXISTS comments(webid TEXT, message TEXT, postdate REAL)');
 
 echo "Done!\n";
 
@@ -31,7 +31,7 @@ if($webid->authenticateClient()) {
 	if($message != null) {
 		echo "Message: ".$message."\n";
 
-		if($db->exec("INSERT INTO comments( webid, message ) VALUES ( '$webid_uri' , '$message' )")) {
+		if($db->exec("INSERT INTO comments( webid, message, postdate ) VALUES ( '$webid_uri' , '$message', julianday('now') )")) {
 			echo "Message successfully saved!\n";
 		} else {
 			echo "ERROR: Message has not been saved!";
