@@ -1,10 +1,14 @@
 <?php
+
 include_once("../semsol-arc2/ARC2.php");
 include_once("../phpseclib/Math/BigInteger.php");
 include_once("../phpseclib/Crypt/RSA.php");
 include_once("../phpseclib/File/X509.php");
 
 $x509 = new File_X509();
+$db = new SQLite3('../data/webid.db');
+
+$db->exec('CREATE TABLE IF NOT EXISTS users(webid TEXT PRIMARY KEY, status TEXT)');
 
 // Load the x509 cert from the server variable
 $cert = $x509->loadX509($_SERVER['SSL_CLIENT_CERT']);
@@ -39,5 +43,25 @@ $rsa->k = strlen($rsa->modulus->toBytes());
 $x509->setPublicKey($rsa);
 
 // Validate the certificate signature with the new public key
-echo $x509->validateSignature(false) ? 'valid' : 'invalid';
+if($x509->validateSignature(false)) {
+
+	$status = $_REQUEST['message'];
+	if($db->exec("INSERT INTO users ( webid, status ) VALUES ( '$webid', '$status' )")) {
+		echo "SUCCESS\n";
+		echo "Your Certificate and WebId are valid.\n";
+		echo "Your Status has been changed to ".$status."\n\n";
+	}
+} else {
+	echo "Could not validate the signature of your Certificate with your WebId Public Key.\n";
+}
+
+$results = $db->query('SELECT * FROM users');
+
+echo "=== REGISTERED WEB IDS ===\n";
+
+while ($row = $results->fetchArray()) { 
+    echo "ID: ".$row['webid']."\n";
+    echo "STATUS: ".$row['status']."\n";
+    echo "=========================\n";
+}
 ?>
