@@ -3,7 +3,7 @@
             <div class="container">
                 <div class="content has-text-centered">
                     <p>
-                        <strong>WebId.</strong> Authentication made simple.
+                        <strong>Congratulations!</strong> You have reached the footer.
                     </p>
 
                 </div>
