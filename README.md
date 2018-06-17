@@ -263,6 +263,14 @@ You can upload your `certificate.pfx` to your browser via the settings
 
 We assume that HTTP Header and Turtle syntax have been checked before (see above). This part outlines additional validation to see whether everything is working. 
 
+## Certificate and WebId Validation using curl
+
+To verify your certificate, you can run 
+
+```
+ curl -v -L --cert ~/path/to/your/cert.pem:yourpassword https://webid.dbpedia.org/verify
+```
+
 ## Content validation of WebID 
 TODO shacl 
 
