@@ -268,8 +268,19 @@ We assume that HTTP Header and Turtle syntax have been checked before (see above
 To verify your certificate, you can run 
 
 ```
- curl -v -L --cert ~/path/to/your/cert.pem:yourpassword https://webid.dbpedia.org/verify
+ curl -v -L --cert ~/path/to/your/cert.pem:yourpassword https://webid.dbpedia.org/verify.php
 ```
+
+If everything is configured correctly, this will return your WebId and Public Key along with a SUCCESS message
+
+You can try out your WebId by sending us a message by running
+
+```
+ curl -v -L --cert ~/path/to/your/cert.pem:yourpassword --data-urlencode "message=Thanks for the Tutorial!" https://webid.dbpedia.org/thanks.php
+```
+
+To verify your browser installation, you can go to https://webid.dbpedia.org/messageboard and post a message using your new WebId.
+
 
 ## Content validation of WebID 
 TODO shacl 
