@@ -6,15 +6,24 @@ include_once("../phpseclib/Crypt/RSA.php");
 include_once("../phpseclib/File/X509.php");
 
 $x509 = new File_X509();
-$db = new SQLite3('../data/webid.db');
-
-$db->exec('CREATE TABLE IF NOT EXISTS users(webid TEXT PRIMARY KEY, status TEXT)');
 
 // Load the x509 cert from the server variable
 $cert = $x509->loadX509($_SERVER['SSL_CLIENT_CERT']);
 
+if($cert == null) {
+	echo "Certificate not found\n";
+}
+
+echo "Certificate found.\n";
+
 // Get the WebId URI from the certificate
 $webid = $cert["tbsCertificate"]["extensions"][2]["extnValue"][0]["uniformResourceIdentifier"];
+
+if($webid == null) {
+	echo "Certificate does not contain a WebId\n";
+}
+
+echo "WebId: ".$webid."\n";
 
 // Parse the WebId with a TTL parser
 $parser = ARC2::getRDFParser();
@@ -32,6 +41,9 @@ $exponentBinaryString = $index[$rsakey]["http://www.w3.org/ns/auth/cert#exponent
 $modulus = new Math_BigInteger($modulusBinaryString, 256);
 $exponent = new Math_BigInteger($exponentBinaryString, 256);
 
+echo "PubKey Modulus: ".$modulus."\n";
+echo "PubKey Exponent: ".$exponent."\n";
+
 // Create a new public key
 $rsa = new Crypt_RSA();
 $rsa->modulus = $modulus;
@@ -45,23 +57,11 @@ $x509->setPublicKey($rsa);
 // Validate the certificate signature with the new public key
 if($x509->validateSignature(false)) {
 
-	$status = $_REQUEST['message'];
-	if($db->exec("INSERT INTO users ( webid, status ) VALUES ( '$webid', '$status' )")) {
 		echo "SUCCESS\n";
 		echo "Your Certificate and WebId are valid.\n";
-		echo "Your Status has been changed to ".$status."\n\n";
-	}
+
 } else {
 	echo "Could not validate the signature of your Certificate with your WebId Public Key.\n";
 }
 
-$results = $db->query('SELECT * FROM users');
-
-echo "=== REGISTERED WEB IDS ===\n";
-
-while ($row = $results->fetchArray()) { 
-    echo "ID: ".$row['webid']."\n";
-    echo "STATUS: ".$row['status']."\n";
-    echo "=========================\n";
-}
 ?>
