@@ -236,12 +236,16 @@ You can validate the contents of `cert.cer` by running
 openssl x509 -in cert.cer -text
 ```
 
-### PKCS 12 file (.pfx or .p12)
-
+### PKCS 12 file (.pfx, .pem or .p12)
+PKCS 12 is an archive file format that serves as a container for several cryptographic parts. 
 Bundle your new `cert.cer` to a PKCS12 file including your `private_key_webid.pem` by running the following command:
 
 ```
+# Bundling
 openssl pkcs12 -export -out certificate.pfx -inkey private_key_webid.pem -in cert.cer
+# Conversion to .pem
+openssl pkcs12 -in certificate.pfx -out certificate.pem
+
 ```
 
 This generates a new file `certificate.pfx`. 
@@ -268,7 +272,7 @@ We assume that HTTP Header and Turtle syntax have been checked before (see above
 To verify your certificate, you can run 
 
 ```
- curl -v -L --cert ~/path/to/your/cert.pem:yourpassword https://webid.dbpedia.org/verify.php
+ curl -v -L --cert certificate.pem:yourpassword https://webid.dbpedia.org/verify.php
 ```
 
 If everything is configured correctly, this will return your WebId and Public Key along with a SUCCESS message
@@ -276,7 +280,7 @@ If everything is configured correctly, this will return your WebId and Public Ke
 You can try out your WebId by sending us a message by running
 
 ```
- curl -v -L --cert ~/path/to/your/cert.pem:yourpassword --data-urlencode "message=Thanks for the Tutorial!" https://webid.dbpedia.org/thanks.php
+ curl -v -L --cert certificate.pem:yourpassword --data-urlencode "message=Thanks for the Tutorial!" https://webid.dbpedia.org/thanks.php
 ```
 
 To verify your browser installation, you can go to https://webid.dbpedia.org/messageboard and post a message using your new WebId.
