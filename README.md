@@ -185,7 +185,7 @@ Private key and X.509 together are required for Client Certificate Authorization
 
 ### X.509 certificate with WebID in Subject Alternative Name
 
-The certificate file (.cer) file is created using your private key and a config file. Below is a sample config file (copy and paste to `cert.conf`) and addapt each line.
+The certificate file (.cer) file is created using your private key and a config file. Below is a sample config file (copy and paste to `cert.config`) and addapt each line.
 *The most important part is the URI in alt_names* 
 
 ```
