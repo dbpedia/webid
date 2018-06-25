@@ -1,20 +1,24 @@
 <?php
 
-include_once("semsol-arc2/ARC2.php");
-include_once("phpseclib/Math/BigInteger.php");
-include_once("phpseclib/Crypt/RSA.php");
-include_once("phpseclib/File/X509.php");
-include_once("webidauth/WebIdAuth.php");
+include_once("WebIdAuth.php");
+include_once("WebIdData.php");
 
-$webid = new WebIdAuth();
+try
+{
+	$webidauth = WebIdAuth::authenticateClient($_SERVER["SSL_CLIENT_CERT"]);
 
-if($webid->authenticateClient()) {
+	if($webidauth) {
 
-	echo "SUCCESS\n";
-	echo "Your Certificate and WebId are valid.\n";
-	echo "WebId: ".$webid->getUri()."\n";
-	echo "Name: ".$webid->getName()."\n";
-	echo "Public Key: ".$webid->getPublicKey()."\n";
-} else {
-	echo "Could not validate the signature of your Certificate with your WebId Public Key.\n";
+		$webid = new WebIdData($webidauth->webid_uri, $webidauth->webid_data);
+
+		echo "SUCCESS\n";
+		echo "Your Certificate and WebId are valid.\n";
+		echo "WebId: ".$webidauth->webid_uri."\n";
+		echo "Name: ".$webid->getFoafName()."\n";
+		echo "Public Key: ".$webid->getPublicKey()."\n";
+	} else {
+		echo "Could not validate the signature of your Certificate with your WebId Public Key.\n";
+	}
+} catch(Exception $e) {
+	echo $e;
 }

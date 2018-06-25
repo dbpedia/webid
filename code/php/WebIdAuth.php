@@ -1,132 +1,190 @@
 <?php
 
+//set_include_path(get_include_path() . DIRECTORY_SEPARATOR . 'phpseclib');
+include_once("phpseclib/Math/BigInteger.php");
+include_once("phpseclib/Crypt/RSA.php");
+include_once("phpseclib/Crypt/Hash.php");
+include_once("phpseclib/File/X509.php");
+include_once("phpseclib/File/ASN1.php");
+
+include_once("semsol-arc2/ARC2.php");
+
 /**
- * Authentication using WebId
- *
- * @package WebIdAuthentication
- * @author  Jan Forberg <jan.forberg@hotmail.de>
- * @access  public
- */
+* Manages authentication using WebId.
+*
+* @package WebIdAuthentication
+* @author  Jan Forberg <jan.forberg@hotmail.de>
+* @access  public
+*/
 class WebIdAuth
 {
-	/**
-     * Client Cert (ie. e or d)
-     *
-     * @var String
-     * @access public
-     */
-    var $client_cert;
+  /**
+  * Web Id URI
+  *
+  * @var string
+  * @access private
+  */
+  var $webid_uri;
+
+  /**
+  * Web Id Dara array
+  *
+  * @var string
+  * @access private
+  */
+  var $webid_data;
+
+  /**
+  * Web Id Public Key
+  *
+  * @var string
+  * @access private
+  */
+  var $webid_public_key;
+
+  /**
+  * x509 Client Certificate
+  *
+  * @var File_X509
+  * @access private
+  */
+  var $x509;
+
+  var $x509_data;
+
+  var $x509_public_key;
+
+
+  function __construct() {
+
+  }
+
+  /** Authenticates a client by a passed client Certificate */
+  static function authenticateClient($client_cert) {
+
+    $auth = new WebIdAuth();
+
+    $auth->loadX509Cert($client_cert);
+
+    $auth->loadWebId($auth->webid_uri);
+
+    if($auth->comparePublicKeys()) {
+      return $auth;
+    }
+
+    return false;
+  }
+
+  /**
+   * Loads a x509 certificate from a given client certificate pem string
+   * @param  string $client_cert_pem  The client certificate as PEM encoded String
+   * @return array                    the x509 certificate as data array
+   */
+  function loadX509Cert($client_cert_pem) {
+
+    // Create a new X509 object
+    $this->x509 = new phpseclib\File\X509();
+
+    // Load the PEM encoded certificate, returns data array or false
+    $this->x509_data = $this->x509->loadX509($client_cert_pem);
+
+    if($this->x509_data === false) {
+      throw new InvalidArgumentException("The passed PEM certificate could not be parsed: ".print_r($this->x509_data));
+    }
+
+    // Get the WebId URI from the certificate data array
+    try {
+      $this->webid_uri = $this->x509_data["tbsCertificate"]["extensions"][2]["extnValue"][0]["uniformResourceIdentifier"];
+      $this->x509_public_key = $this->x509_data["tbsCertificate"]["subjectPublicKeyInfo"]["subjectPublicKey"];
+
+    } catch(Exception $e) {
+      throw new InvalidArgumentException("The passed Certificate is formatted incorrectly. Please check your x509 certificate");
+    }
+
+    if($this->webid_uri === null || $this->webid_uri === '') {
+      throw new InvalidArgumentException("The passed Certificate is not set up for WebId Authentication. Make sure to write your Webid to the Subject Alternate Name field");
+    }
+
+    if($this->x509_public_key === null || $this->x509_public_key === '') {
+      throw new InvalidArgumentException("The passed Certificate is not set up for WebId Authentication. The certificate did not contain the required public key information");
+    }
+
+    // Return the data array
+    return $this->x509_data;
+  }
+
+  /**
+   * Loads a webId from an URI
+   * @param  string $webid_uri  The webid URI
+   * @return array              The webId as a data array
+   */
+  function loadWebId($webid_uri) {
+
+    // Parse the WebId with a TTL parser
+    $parser = ARC2::getRDFParser();
+    $parser->parse($webid_uri);
+
+    // Create an index from the parsed TTL
+    $this->webid_data = $parser->getSimpleIndex();
+
+    try {
+      // Get modulus and exponent from the webid index
+      $rsakey = $this->webid_data[$this->webid_uri]["http://www.w3.org/ns/auth/cert#key"][0];
+      $modulus = $this->webid_data[$rsakey]["http://www.w3.org/ns/auth/cert#modulus"][0];
+      $exponent = $this->webid_data[$rsakey]["http://www.w3.org/ns/auth/cert#exponent"][0];
+
+
+      // Convert modulus and exponent to PEM public key
+      $this->webid_public_key = $this->modexp2PEM($modulus, $exponent);
+
+    } catch(Exception $e) {
+      throw new InvalidArgumentException("The WebId document at the passed URI is not in the correct format.
+      Make sure to publish your Public Key information correctly. (Refer to https://github.org/dbpedia/webid)");
+      }
+
+      return $this->webid_data;
+    }
 
     /**
-     * Web Id URI 
-     *
-     * @var String
-     * @access private 
+     * Compares the public keys of WebId and x509 certificate.
+     * @return bool true, if public keys  match, false otherwise
      */
-    var $webid_uri;
+    function comparePublicKeys() {
 
-     /**
-     * Web Id Name 
-     *
-     * @var String
-     * @access private 
-     */
-    var $webid_name;
 
-	/**
-     * Web Id Public Key 
-     *
-     * @var String
-     * @access private 
-     */
-    var $webid_public_key;
+      if($this->x509_public_key === null || $this->x509_public_key === '') {
+        throw new Exception("Invalid call to validate. Make sure to load a x509 certificate first");
+      }
+
+      if($this->webid_public_key === null || $this->webid_public_key === '') {
+        throw new Exception("Invalid call to validate. Make sure to load a webId first");
+      }
+
+      return $this->webid_public_key == $this->x509_public_key;
+    }
 
     /**
-     * x509 Client Certificate
-     *
-     * @var File_X509
-     * @access private 
+     * Converts a modulus and exponent to the PEM encoded public key formatted
+     * @param  string $modulus  modulus as a String
+     * @param  string $exponent exponent as a string
+     * @return string           the PEM encoded public key as a String
      */
-    var $x509;
+    function modexp2PEM($modulus, $exponent) {
 
-    /**
-     * Refreshes the internal data with the current client_cert
-     */
-	function parseData() {
+      // Convert modulus and exponent to BigInteger
+      $modulusBigInt = new phpseclib\Math\BigInteger($modulus, 16);
+      $exponentBigInt = new phpseclib\Math\BigInteger($exponent);
 
-		// Load the x509 cert from the server variable
-		$this->x509 = new File_X509();
-		$cert = $this->x509->loadX509($this->client_cert);
+      // Create public key from modulus and exponent
+      $rsa = new phpseclib\Crypt\RSA();
+      $rsa->modulus = $modulusBigInt;
+      $rsa->exponent = $exponentBigInt;
+      $rsa->publicExponent = $exponentBigInt;
+      $rsa->k = strlen($rsa->modulus->toBytes());
 
-		// Get the WebId URI from the certificate
-		$this->webid_uri = $cert["tbsCertificate"]["extensions"][2]["extnValue"][0]["uniformResourceIdentifier"];
-		$this->webid_name = $cert["tbsCertificate"]["subject"]["rdnSequence"][6][0]["value"]["utf8String"];
-
-		// Parse the WebId with a TTL parser
-		$parser = ARC2::getRDFParser();
-		$parser->parse($this->webid_uri);
-
-		// Create an index from the parsed TTL
-		$index = $parser->getSimpleIndex();
-
-		// Get modulus and exponent from the index
-		$rsakey = $index[$this->webid_uri]["http://www.w3.org/ns/auth/cert#key"][0];
-		$modulusBinaryString = $index[$rsakey]["http://www.w3.org/ns/auth/cert#modulus"][0];
-		$exponentBinaryString = $index[$rsakey]["http://www.w3.org/ns/auth/cert#exponent"][0];
-
-		// Convert modulus and exponent to BigInteger
-		$modulus = new Math_BigInteger($modulusBinaryString, 256);
-		$exponent = new Math_BigInteger($exponentBinaryString, 256);
-
-		// Create a new public key
-		$rsa = new Crypt_RSA();
-		$rsa->modulus = $modulus;
-		$rsa->exponent = $exponent;
-		$rsa->publicExponent = $exponent;
-		$rsa->k = strlen($rsa->modulus->toBytes());
-
-		$this->webid_public_key = $rsa->getPublicKey();
-
-		// Set the public key of the certificate, overriding the existing one
-		$this->x509->setPublicKey($rsa);
-	}
-
-	function __construct() {
-		$this->client_cert = $_SERVER["SSL_CLIENT_CERT"];
-
-		$this->parseData();
-	}
-
-	/*
-	 * Authenticates the client, returns true or false
-	 */
-	function authenticateClient() {
-
-		$this->parseData();
-
-		return $this->x509->validateSignature(false);
-	}
-
-	/*
-	 * Returns the WebId URI
-	 */
-	function getUri() {
-		return $this->webid_uri;
-	}
-
-	/*
-	 * Returns the WebId Name
-	 */
-	function getName() {
-		return $this->webid_name;
-	}
-
-	/*
-	 * Returns the WebId Public Key
-	 */
-	function getPublicKey() {
-		return $this->webid_public_key;
-	}
+      return $rsa->getPublicKey(phpseclib\Crypt\RSA::PUBLIC_FORMAT_PKCS1_RAW);
+    }
 }
+
 
 ?>
