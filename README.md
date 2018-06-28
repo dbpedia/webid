@@ -128,12 +128,12 @@ Create a new file and name it `webid.ttl`. Make sure to replace the sequences <N
    foaf:primaryTopic <#this> .
 
 <#this> a foaf:Person ;
-   foaf:name "<YOUR_NAME>";
+   foaf:name "$YOUR_NAME";
    cert:key [ 
        a cert:RSAPublicKey;
-       rdfs:label "<THIS FIELD IS FOR YOUR LABEL>";
-       cert:modulus "<PUBLIC_KEY_MODULUS>"^^xsd:hexBinary;
-       cert:exponent "<PUBLIC_KEY_EXPONENT>"^^xsd:integer ;
+       rdfs:label "THIS FIELD IS FOR YOUR LABEL, SO YOU CAN NAME DIFFERENT KEYS";
+       cert:modulus "PUBLIC_KEY_MODULUS(NO WHITSPACE, REMOVE 'modulus=`)"^^xsd:hexBinary;
+       cert:exponent "PUBLIC_KEY_EXPONENT(NO  WHITESPACE)"^^xsd:integer ;
       ] . 
 
 ``` 
