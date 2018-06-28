@@ -1,0 +1,61 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix cert: <http://www.w3.org/ns/auth/cert#> .
+@prefix my: <http://www.whatever.org/> .
+
+my:WebIDDocumentShape 
+	a sh:NodeShape ;
+	sh:targetClass foaf:PersonalProfileDocument ;  
+	sh:property [                 
+		sh:path foaf:maker ; 
+		sh:minCount 1 ;
+	]  ;
+	sh:property [                 
+		sh:path foaf:primaryTopic ; 
+		sh:minCount 1 ;
+	]  .
+
+
+my:WebIDShape
+	a sh:NodeShape ;
+	sh:targetClass foaf:Person, foaf:Agent, foaf:Organization ;  
+	sh:property [                 
+		sh:path foaf:name ; 
+		sh:minCount 1 ;
+	]  ;
+	sh:property [                 
+		sh:path cert:key ;       
+		sh:class cert:RSAPublicKey ;
+		sh:minCount 1 ;
+	]  .
+
+my:CertKeyShape
+	a sh:NodeShape ;
+	# sh:targetObjectsOf cert:key ;
+	sh:targetClass cert:RSAPublicKey ;  
+	sh:property [                 
+		sh:path cert:modulus ; 
+		# URI <http://www.w3.org/2001/XMLSchema#hexBinary> has no registered function factory
+		# sh:datatype xsd:hexBinary ;      
+		sh:minCount 1 ;
+		sh:maxCount 1 ;
+		sh:maxLength 512 ;
+		sh:minLength 512 ;
+		sh:pattern "^[A-F0-9]*$" ;
+	] ; 
+	sh:property [                 
+		sh:path cert:exponent ;       
+		sh:minCount 1 ;
+		sh:maxCount 1 ;
+	];
+	sh:property [ 
+		sh:message "Warning: cert:exponent should have datatype xsd:nonNegativeInteger instead of xsd:integer or xsd:int, but it still should work "@en ;
+		sh:path cert:exponent ;       
+		sh:datatype xsd:nonNegativeInteger ;
+	] .
+
+ 
