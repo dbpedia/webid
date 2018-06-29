@@ -32,7 +32,8 @@ $format = "&r=".$_GET['r'];
 //******************************
 // building the uri
 
-//curl  http://localhost:8080/webid%2Dshacl/validate --data-urlencode "d=http://kurzum.net/webid.ttl" --data-urlencode "s=https://raw.githubusercontent.com/dbpedia/wster/voc/webid-shacl.ttl" -d "A" -d "v" -d "r=shacl"
+//curl  http://localhost:8080/shacl/validate --data-urlencode "d=http://kurzum.net/webid.ttl" --data-urlencode "s=https://raw.githubusercontent.com/dbpedia/webid/master/voc/webid-shacl.ttl" -d "A" -d "v" -d "r=shacl"
+
 $fixed_vars="?s=".urlencode($schemas)."&A&v&" ;
 $uri=$base.$fixed_vars.$dataseturi.$output.$format;
 
