@@ -13,10 +13,10 @@ $authenticated = false;
 
 try {
 
-  $webidauth = WebIdAuth::authenticateClient($_SERVER["SSL_CLIENT_CERT"]);
+  $webidauth = WebIdAuth::create($_SERVER["SSL_CLIENT_CERT"]);
   $db->exec('CREATE TABLE IF NOT EXISTS comments(webid TEXT, message TEXT, postdate REAL)');
 
-  if($webidauth) {
+  if($webidauth->comparePublicKeys()) {
 
     $webid = new WebIdData($webidauth->webid_uri, $webidauth->webid_data);
     $authenticated = true;

@@ -14,9 +14,9 @@ echo "Done!\n";
 
 try
 {
-	$webidauth = WebIdAuth::authenticateClient($_SERVER["SSL_CLIENT_CERT"]);
+	$webidauth = WebIdAuth::create($_SERVER["SSL_CLIENT_CERT"]);
 
-	if($webidauth) {
+	if($webidauth->comparePublicKeys()) {
 
 		$webid = new WebIdData($webidauth->webid_uri, $webidauth->webid_data);
 

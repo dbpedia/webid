@@ -54,13 +54,12 @@ class WebIdAuth
 
   var $x509_public_key;
 
-
   function __construct() {
 
   }
 
   /** Authenticates a client by a passed client Certificate */
-  static function authenticateClient($client_cert) {
+  static function create($client_cert) {
 
     $auth = new WebIdAuth();
 
@@ -68,11 +67,7 @@ class WebIdAuth
 
     $auth->loadWebId($auth->webid_uri);
 
-    if($auth->comparePublicKeys()) {
-      return $auth;
-    }
-
-    return false;
+    return $auth;
   }
 
   /**
@@ -130,7 +125,7 @@ class WebIdAuth
     try {
       // Get modulus and exponent from the webid index
       $rsakey = $this->webid_data[$this->webid_uri]["http://www.w3.org/ns/auth/cert#key"][0];
-      $modulus = $this->webid_data[$rsakey]["http://www.w3.org/ns/auth/cert#modulus"][0];
+      $modulus = strtoupper($this->webid_data[$rsakey]["http://www.w3.org/ns/auth/cert#modulus"][0]);
       $exponent = $this->webid_data[$rsakey]["http://www.w3.org/ns/auth/cert#exponent"][0];
 
 
@@ -150,7 +145,6 @@ class WebIdAuth
      * @return bool true, if public keys  match, false otherwise
      */
     function comparePublicKeys() {
-
 
       if($this->x509_public_key === null || $this->x509_public_key === '') {
         throw new Exception("Invalid call to validate. Make sure to load a x509 certificate first");
