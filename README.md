@@ -63,29 +63,6 @@ Note: The WebID profile document can contain any amount of additional informatio
 
 # Setup
 
-## Public/Private Key
-### Generation
-#### Ubuntu (openssl)
-
-```
-# This will create two files in PEM format, private_key_webid.pem and public_key_webid.pem
-openssl genpkey -algorithm RSA -out private_key_webid.pem -pkeyopt rsa_keygen_bits:2048
-openssl rsa -pubout -in private_key_webid.pem -out public_key_webid.pem
-```
-
-### Modulus and exponent
-For the WebID, you will need the modulus and exponent of your public_key.
-#### Ubuntu (openssl)
-```
-# Note that the public key was generated from the private key in the first place. 
-# To print the modulus without separators for copy/paste into your WebId document, run
-openssl rsa -noout -modulus -in private_key_webid.pem
-# This command will print out the exponent of your public key. 
-# The modulus printed out here is essentially the same, but in a different format (remove whitespace, newlines, : and 00 at the front). 
-openssl rsa -pubin -inform PEM -text -noout < public_key_webid.pem
-
-```
-
 ## WebID and WebID profile document
 ### Choose the URI
 Before publishing your WebID, think about the URI and the hosting space. Different options are documented below. 
@@ -111,11 +88,9 @@ Create a regular virtualhost for the domain and put the file there. since `text/
 Example:
 `curl -I http://kurzum.net/webid.ttl`
 
-
-
 ### Create the WebID profile document in Turtle syntax
 
-Create a new file and name it `webid.ttl`. Make sure to replace the sequences <NAME>, <PUBLIC_KEY_MODULUS> and <YOUR_PUBLIC_KEY_EXPONENT> with your respective information.
+Create a new file and name it `webid.ttl`. Make sure to replace YOUR_NAME, PUBLIC_KEY_MODULUS and PUBLIC_KEY_EXPONENT with your respective information. Generation of the public key modulus and exponent is described in the next section. You can generate them using `openssl` or the provided `create_certs.sh` bash script.
 
 ```
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -128,7 +103,7 @@ Create a new file and name it `webid.ttl`. Make sure to replace the sequences <N
    foaf:primaryTopic <#this> .
 
 <#this> a foaf:Person ;
-   foaf:name "$YOUR_NAME";
+   foaf:name "YOUR_NAME";
    cert:key [ 
        a cert:RSAPublicKey;
        rdfs:label "THIS FIELD IS FOR YOUR LABEL, SO YOU CAN NAME DIFFERENT KEYS";
@@ -137,8 +112,6 @@ Create a new file and name it `webid.ttl`. Make sure to replace the sequences <N
       ] . 
 
 ``` 
-
-
 
 A complete WebId Document can look like this:
 
@@ -177,6 +150,45 @@ A complete WebId Document can look like this:
  * http://linkeddata.uriburner.com:8000/vapour (check Turtle and also HTTP Header)
  * http://www.easyrdf.org/converter 
 
+## Using the Helper Script
+
+You can either download and run the `create_certs.sh` script or skip this section and do the Private/Public key generation yourself using openssl. To execute the script, simply download and run it using 
+
+```
+mkdir certs
+cd certs
+bash ../create_certs.sh
+```
+
+The script will ask you for the relevant information for your certificate and WebId document. After running the script, the folder `certs` will contain the private and public key files, a x509 certificate, a PKCS12 signed certificate and a text file containing the exponent and modulus information for your WebId document. Replace the certificate information in your published `webid.ttl` file with the content of the generated text file.
+
+You can upload the PKCS12 certificate (.pfx) to your browser by using the password you entered when running the script.
+That's it, you're all set to use your WebId.
+
+*Security Notice*: the PKCS12 file contains the private key. Keep it a secret and entrust it only to reliable applications such as your browser, `curl` or other software that should act on your behalf (like your browser loging in for you). 
+
+## Public/Private Key
+### Generation
+#### Ubuntu (openssl)
+
+```
+# This will create two files in PEM format, private_key_webid.pem and public_key_webid.pem
+openssl genpkey -algorithm RSA -out private_key_webid.pem -pkeyopt rsa_keygen_bits:2048
+openssl rsa -pubout -in private_key_webid.pem -out public_key_webid.pem
+```
+
+### Modulus and exponent
+For the WebID, you will need the modulus and exponent of your public_key.
+#### Ubuntu (openssl)
+```
+# Note that the public key was generated from the private key in the first place. 
+# To print the modulus without separators for copy/paste into your WebId document, run
+openssl rsa -noout -modulus -in private_key_webid.pem
+# This command will print out the exponent of your public key. 
+# The modulus printed out here is essentially the same, but in a different format (remove whitespace, newlines, : and 00 at the front). 
+openssl rsa -pubin -inform PEM -text -noout < public_key_webid.pem
+
+```
 
 ## PKCS12 file
 In cryptography, PKCS #12 defines an archive file format for storing many cryptography objects as a single file. It is commonly used to bundle a private key with its X.509 certificate (Source: https://en.wikipedia.org/wiki/PKCS_12).
@@ -185,7 +197,7 @@ Private key and X.509 together are required for Client Certificate Authorization
 
 ### X.509 certificate with WebID in Subject Alternative Name
 
-The certificate file (.cer) file is created using your private key and a config file. Below is a sample config file (copy and paste to `cert.conf`) and addapt each line.
+The certificate file (.cer) file is created using your private key and a config file. Below is a sample config file (copy and paste to `cert.config`) and addapt each line.
 *The most important part is the URI in alt_names* 
 
 ```
