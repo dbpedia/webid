@@ -1,0 +1,24 @@
+@prefix : <http://shacl-php/example-propertyShape-as-BlankNode/> .
+@prefix dash: <http://datashapes.org/dash#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+#
+# SHAPE
+#
+# Shape with multiple PropertyShapes, each referenced via sh:property and attached as blank node.
+#
+
+:NodeShape
+    rdf:type sh:NodeShape ;
+    sh:targetClass foaf:Person ;
+    sh:property [
+            a sh:PropertyShape ;
+            sh:path foaf:firstName ;
+            sh:minCount 1 ;
+        ] , [
+            a sh:PropertyShape ;
+            sh:path foaf:givenName ;
+            sh:minCount 1 ;
+        ] .
