@@ -1,0 +1,56 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : 17.06.2018, 12:28:51
+    Author     : Jan
+*/
+
+div.exhibit-toolboxWidget-popup {
+    float: right;
+    top: 0 !important;
+    right: 0 !important;
+    position: relative !important;
+}
+
+.person-card {
+  float: left;
+  height: 19em;
+  padding: 1em;
+  margin: 1em;
+
+  background-color: #fff;
+  box-shadow: 0 2px 3px rgba(10,10,10,.1),0 0 0 1px rgba(10,10,10,.1);
+  color: #4a4a4a;
+}
+
+.person-card a {
+  color: #C0C0C0;
+}
+
+.text-search input {
+  max-width: 30em;
+  margin-bottom: 3em;
+
+}
+
+.person-card .image {
+  width: 12em;
+  height: 12em;
+  margin-bottom: 1em;
+}
+
+.fill {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden
+}
+
+.fill img {
+    flex-shrink: 0;
+    min-width: 100%;
+    min-height: 100%
+}
