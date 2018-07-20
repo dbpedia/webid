@@ -12,7 +12,7 @@ WebID is a novel way to identify and authenticate users and organisations on the
 * No need for passwords any more. Authentication is done with your own secure key
 
 In comparison to any other services like Facebook, LinkedIn or OpenID you are the owner of the data and of the secure key and therefore your own authority.
-The WebID workflow uses public/private key cryptography and client certifcate authorization to establish secure, authenticated HTTPS connections. 
+The WebID workflow uses public/private key cryptography and client certificate authorization to establish secure, authenticated HTTPS connections. 
 We compiled a list of background reading at the end. 
  
 
@@ -20,11 +20,11 @@ We compiled a list of background reading at the end.
 WebID or WebID URI - The WebID itself is an identifier that represents a person or an organisation. In simple terms it is a self-chosen URI that can be used to retrieve additional information in form of the WebID profile document via the browser or with software (e.g. `curl`). Note the duplicate in WebID(entifier) and Uniform Resource Identifier (URI).     
 Examples:
 
-WebID profile document or WebID file - The WebID profile document is the file that is downloaded when you execute a HTTP(S) request  and contains the identifier and all relevant information about the person and organisation in particular the RSA Public Key used to verify authentification. The file is normally written in Turtle Syntax (RDF).
+WebID profile document or WebID file - The WebID profile document is the file that is downloaded when you execute a HTTP(S) request  and contains the identifier and all relevant information about the person and organisation, in particular the RSA Public Key used to verify authentication. The file is normally written in Turtle Syntax (RDF).
 
 `#` fragment - In website URLs the `#` is used to jump to certain parts of a HTML page, usually a paragraph. In WebID, the URL of the WebID profile document is appended by a fragment `#this` or `#me` to distinguish between the URL of the WebID profile document (the whole file) and the identifier and data in the document (part of the file).  
 
-Client Certifcate or PKCS12 File (*.pfx;*.p12) - The file that contains an X.509 certificate along with the private key to establish the secure connection and authentification. 
+Client Certificate or PKCS12 File (*.pfx;*.p12) - The file that contains an X.509 certificate along with the private key to establish the secure connection and authentication. 
 
 # Example 1
 This is Jan's WebID: `http://holycrab13.github.io/webid.ttl#this`
@@ -84,7 +84,8 @@ Note that Github pages sets the `Content-Type` HTTP response header correctly to
 `curl -I "https://holycrab13.github.io/webid.ttl#this"`
 
 #### Apache2 
-Create a regular virtualhost for the domain and put the file there. since `text/turtle` is normally registered as mimetype under `/etc/mime.types` Apache2 will automatically recognise it. Otherwise you will need to add `AddType text/turtle .ttl` to the .htaccess or virtualhost config.
+Create a regular virtualhost for the domain and put the file there. since `text/turtle` is normally registered as mimetype under `/etc/mime.types` Apache2 will automatically recognise it. Otherwise you will need to add `AddType text/turtle .ttl` to the `.htaccess` file or the virtual host config.
+
 Example:
 `curl -I http://kurzum.net/webid.ttl`
 
@@ -165,7 +166,7 @@ The script will ask you for the relevant information for your certificate and We
 You can upload the PKCS12 certificate (.pfx) to your browser by using the password you entered when running the script.
 That's it, you're all set to use your WebId.
 
-*Security Notice*: the PKCS12 file contains the private key. Keep it a secret and entrust it only to reliable applications such as your browser, `curl` or other software that should act on your behalf (like your browser loging in for you). 
+*Security Notice*: the PKCS12 file contains the private key. Keep it a secret and entrust it only to reliable applications such as your browser, `curl` or other software that should act on your behalf (like your browser logging in for you). 
 
 ## Public/Private Key
 ### Generation
@@ -197,7 +198,7 @@ Private key and X.509 together are required for Client Certificate Authorization
 
 ### X.509 certificate with WebID in Subject Alternative Name
 
-The certificate file (.cer) file is created using your private key and a config file. Below is a sample config file (copy and paste to `cert.config`) and addapt each line.
+The certificate file (.cer) file is created using your private key and a config file. Below is a sample config file (copy and paste to `cert.config`) and adapt each line.
 *The most important part is the URI in alt_names* 
 
 ```
@@ -213,7 +214,7 @@ distinguished_name = dn
 C=DE
 # State
 ST=Saxonia
-# Citry
+# City
 L=Dresden    
 # Organization
 O=DBpedia
@@ -261,7 +262,7 @@ openssl pkcs12 -in certificate.pfx -out certificate.pem
 ```
 
 This generates a new file `certificate.pfx`. 
-*Security Notice*: the file contains the private key. Keep it a secret and entrust it only to reliable applications such as your browser, `curl` or other software that should act on your behalf (like your browser loging in for you). 
+*Security Notice*: the file contains the private key. Keep it a secret and entrust it only to reliable applications such as your browser, `curl` or other software that should act on your behalf (like your browser logging in for you). 
 
 
 ### Browser installation
@@ -269,7 +270,7 @@ This generates a new file `certificate.pfx`.
 You can upload your `certificate.pfx` to your browser via the settings
 
 * Google Chrome: go to Settings > Advanced > Manage Certificates and Import your certificate file.
-* Firefox: go to Preferences > Privacy & Security > Certificates (at bottom) > View Certifiates
+* Firefox: go to Preferences > Privacy & Security > Certificates (at bottom) > View Certificates
 
  Note: some browsers need a restart. There are plugins that let you switch between webids
  * https://chrome.google.com/webstore/detail/openlink-youid/kbepkemknbihgdmdnfainhmiidoblhee?hl=en
@@ -326,4 +327,3 @@ If you are interested in the basic technologies behind WebID and TLS, we recomme
 * TLS, the successor of SSL: https://en.wikipedia.org/wiki/Transport_Layer_Security
 * The TLS handshake: https://en.wikipedia.org/wiki/Transport_Layer_Security#Client-authenticated_TLS_handshake 
 * PKCS12 Files (*.pfx;*.p12)
- 
