@@ -1,5 +1,6 @@
 <?php
 
+include_once("semsol-arc2/ARC2.php");
 
 /**
 * Helper class for easier webid data access.
@@ -14,6 +15,16 @@ class WebIdData
   var $data;
 
   var $uri;
+
+  function __construct($webid_uri) {
+    // Parse the WebId with a TTL parser
+    $parser = ARC2::getRDFParser();
+    $parser->parse($webid_uri);
+
+    // Create an index from the parsed TTL
+    $this->data = $parser->getSimpleIndex();
+    $this->uri = $webid_uri;
+  }
 
   function __construct($webid_uri, $webid_data) {
 
