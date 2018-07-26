@@ -1,6 +1,6 @@
 <?php
 
-include_once("../WebIdAuth2.php");
+include_once("../../WebIdAuth2.php");
 include_once("functions.php");
 
 
