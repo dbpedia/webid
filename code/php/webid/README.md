@@ -1,4 +1,4 @@
-# WebId AUTHENTICATION
+# WebId Authentication
 
 ## Setup
 
