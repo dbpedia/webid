@@ -20,9 +20,13 @@ include_once("webid/WebIdAuth.php");
 ?>
 ```
 
-You can find example applications [here](https://github.com/dbpedia/webid/tree/master/code/php/apps). The `WebIdAuth.php` file contains a number of useful functions for authentication with WebId.
+## Examples
 
-To authenticate a client your server code needs to run the following steps
+You can find example applications [here](https://github.com/dbpedia/webid/tree/master/code/php/apps). 
+
+## Usage
+
+The `WebIdAuth.php` file contains a number of useful functions for authentication with WebId. To authenticate a client your server code needs to run the following steps
 
 1. Find the PEM encoded client certificate
 2. Load the Public Key from the client certificate (The corresponding Private Key has been used to sign the client certificate)
