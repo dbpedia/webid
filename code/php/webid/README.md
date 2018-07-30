@@ -20,7 +20,7 @@ include_once("webid/WebIdAuth.php");
 ?>
 ```
 
-You can find example applications [here][https://github.com/dbpedia/webid/tree/master/code/php/apps]. The `WebIdAuth.php` file contains a number of useful functions for authentication with WebId.
+You can find example applications [here](https://github.com/dbpedia/webid/tree/master/code/php/apps). The `WebIdAuth.php` file contains a number of useful functions for authentication with WebId.
 
 To authenticate a client your server code needs to run the following steps
 
