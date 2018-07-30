@@ -1,10 +1,10 @@
 <?php
 
-include_once("../../WebIdAuth2.php");
+include_once("../../webid/WebIdAuth.php");
 include_once("functions.php");
 
 
-//if(!isset($_SESSION["webidauth"])) {
+if(!isset($_SESSION["webidauth"])) {
 
   try {
 
@@ -15,11 +15,9 @@ include_once("functions.php");
     // Something went super wrong
     echo $e;
   }
-//}
-//}
+}
 
 $webIdAuth = $_SESSION["webidauth"];
-
 if(isset($_POST["register"]) && isset($_POST["termsandconditions"])) {
 
   if($webIdAuth["status"] === WebIdAuth::AUTHENTICATION_SUCCESSFUL) {
@@ -187,4 +185,9 @@ $("#register-modal-close").click(function() {
 
 </script>
 
+<?php
+
+
+// print_r($webIdAuth);
+ ?>
 </html>

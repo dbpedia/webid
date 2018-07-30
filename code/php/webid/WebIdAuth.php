@@ -14,7 +14,7 @@ use phpseclib\Crypt\RSA;
 /**
 * Manages authentication using WebId.
 *
-* @package WebIdAuthentication
+* @package WebId
 * @author  Jan Forberg <jan.forberg@hotmail.de>
 * @access  public
 */
