@@ -1,13 +1,13 @@
 <?php
 
 
-include_once("WebIdAuth.php");
-include_once("WebIdData.php");
+include_once("../WebIdAuth.php");
+include_once("../WebIdData.php");
 
 echo "Preparing Database...\n";
 
 
-$db = new SQLite3('data/webid.db');
+$db = new SQLite3('../data/webid.db');
 $db->exec('CREATE TABLE IF NOT EXISTS comments(webid TEXT, message TEXT, postdate REAL)');
 
 echo "Done!\n";

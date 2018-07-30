@@ -6,7 +6,7 @@ include_once("../../WebIdData.php");
 
 session_start();
 
-$db = new SQLite3('../data/webid.db');
+$db = new SQLite3('../../data/webid.db');
 $webidauth = null;
 $webid = null;
 $authenticated = false;

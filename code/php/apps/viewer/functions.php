@@ -34,6 +34,8 @@ function generateExhibitJson($query) {
 
   $xmlString =  download_query_result($queryUrl);
 
+  echo $xmlString;
+
   $xml = new DOMDocument();
   $xml->loadXML($xmlString);
 

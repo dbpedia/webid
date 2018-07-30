@@ -9,21 +9,46 @@ and open the template in the editor.
 */
 
 div.exhibit-toolboxWidget-popup {
-    float: right;
-    top: 0 !important;
-    right: 0 !important;
-    position: relative !important;
+    display: none;
+}
+
+#people-viewer .exhibit-collectionView-header {
+  display: none;
 }
 
 .person-card {
   float: left;
   height: 19em;
-  padding: 0.5em;
-  margin: 1em;
 
-  background-color: #fff;
-  box-shadow: 0 2px 3px rgba(10,10,10,.1),0 0 0 1px rgba(10,10,10,.1);
-  color: #4a4a4a;
+}
+
+.exhibit-thumbnailView-itemContainer {
+  margin-right: 1em;
+  margin-bottom: 1em;
+}
+
+
+#text-search input {
+  background-color: white;
+    color: #363636;
+    box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
+    max-width: 100%;
+    width: 100%;
+    -webkit-appearance: none;
+    align-items: center;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    display: inline-flex;
+    font-size: 1rem;
+    height: 2.25em;
+    justify-content: flex-start;
+    line-height: 1.5;
+    padding-bottom: calc(0.375em - 1px);
+    padding-left: calc(0.625em - 1px);
+    padding-right: calc(0.625em - 1px);
+    padding-top: calc(0.375em - 1px);
+    position: relative;
+    vertical-align: top;
 }
 
 .person-card a {
@@ -39,7 +64,10 @@ div.exhibit-toolboxWidget-popup {
 .person-card .image {
   width: 12em;
   height: 12em;
-  margin-bottom: 1em;
+}
+
+.person-card .content {
+  padding: 0.5em;
 }
 
 .fill {

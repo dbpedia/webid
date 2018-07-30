@@ -154,9 +154,15 @@ tp: a string embedding user contributed "types" and "properties" declaration.
   <xsl:variable name="result" select="." />
   <xsl:text>{</xsl:text>
   <xsl:for-each select="/sparql:sparql/sparql:head/sparql:variable">
+
     <xsl:variable name="name" select="@name" />
+
+    <xsl:if test="$result/sparql:binding[@name = $name]" >
+      <xsl:if test="position() != 1">,</xsl:if>
+    </xsl:if>
+
     <xsl:apply-templates select="$result/sparql:binding[@name = $name]" />
-    <xsl:if test="position() != last()">,</xsl:if>
+
 
   </xsl:for-each>
   <xsl:text>}</xsl:text>

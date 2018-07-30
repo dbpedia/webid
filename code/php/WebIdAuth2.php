@@ -1,13 +1,15 @@
 <?php
 
-//set_include_path(get_include_path() . DIRECTORY_SEPARATOR . 'phpseclib');
+include_once("semsol-arc2/ARC2.php");
+include_once("phpseclib/File/X509.php");
+include_once("phpseclib/File/ASN1.php");
 include_once("phpseclib/Math/BigInteger.php");
 include_once("phpseclib/Crypt/RSA.php");
 include_once("phpseclib/Crypt/Hash.php");
-include_once("phpseclib/File/X509.php");
-include_once("phpseclib/File/ASN1.php");
 
-include_once("semsol-arc2/ARC2.php");
+use phpseclib\File\X509;
+use phpseclib\Math\BigInteger;
+use phpseclib\Crypt\RSA;
 
 /**
 * Manages authentication using WebId.
@@ -81,7 +83,7 @@ class WebIdAuth
   */
   static function loadX509($client_cert_pem) {
 
-    $x509 = new phpseclib\File\X509();
+    $x509 = new X509();
     $certificate = $x509->loadX509($client_cert_pem);
 
     $certificate["certificatePublicKey"] = $certificate["tbsCertificate"]["subjectPublicKeyInfo"]["subjectPublicKey"];
@@ -154,17 +156,17 @@ class WebIdAuth
   static function modexp2PEM($modulus, $exponent) {
 
     // Convert modulus and exponent to BigInteger
-    $modulusBigInt = new phpseclib\Math\BigInteger($modulus, 16);
-    $exponentBigInt = new phpseclib\Math\BigInteger($exponent);
+    $modulusBigInt = new BigInteger($modulus, 16);
+    $exponentBigInt = new BigInteger($exponent);
 
     // Create public key from modulus and exponent
-    $rsa = new phpseclib\Crypt\RSA();
+    $rsa = new RSA();
     $rsa->modulus = $modulusBigInt;
     $rsa->exponent = $exponentBigInt;
     $rsa->publicExponent = $exponentBigInt;
     $rsa->k = strlen($rsa->modulus->toBytes());
 
-    return $rsa->getPublicKey(phpseclib\Crypt\RSA::PUBLIC_FORMAT_PKCS1_RAW);
+    return $rsa->getPublicKey(RSA::PUBLIC_FORMAT_PKCS1);
   }
 }
 
