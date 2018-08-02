@@ -5,18 +5,18 @@ The PHP Code folder contains the following elements:
  |- server-webidauth: server code for WebId authentication  
   |- semsol-arc2: rdflib included from https://github.com/semsol/arc2/
 |-apps
- |- thanks 
- |- messageboard
- |- viewer
+ |- thanks.php: a webservice, allowing to post a message on the messageboard with `curl` 
+ |- messageboard: GUI for posting messages with WebID, deployed at https://webid.dbpedia.org/apps/messageboard/
+ |- viewer: 
 
 
-## Requirements
-### PHP Versions used during development
+## Requirements (used during development)
+### PHP 7
 ```
 Ubuntu 16.04. PHP 7.0.30-0ubuntu0.16.04.1 (cli) ( NTS )
 Ubuntu 18.04. PHP 7.2.7-0ubuntu0.18.04.2
 ```
-### php-phpseclib used during development
+### php-phpseclib
 *NOTE* do not confuse with `php-seclib`, it is an older packages
 
 In order to use the server WebId authentication, which is the basis for all other code, you first need to install the `php-phpseclib`.
@@ -36,11 +36,11 @@ Folder: lib/server-webidauth
 
 
 
-To use WebId Authentication in your application, put a copy of this folder into your project and include the `WebIdAuth.php` file.
+To use WebId Authentication in your application, put a copy of the `lib/server-webidauth` into your project and include the `WebIdAuth.php` file.
 
 ```php
 <?php
-include_once("webid/WebIdAuth.php");
+include_once("server-webidauth/WebIdAuth.php");
 
 // Your code
 
