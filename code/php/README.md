@@ -1,4 +1,18 @@
-# WebId Authentication
+# PHP Code
+The PHP Code folder contains the following elements:
+
+|-lib - Libraries
+ |-webidauth WebId Authentication library 
+  |-semsol-arc2  
+|-apps
+ |-thanks/thanks.php
+ |-messageboard
+ |-thanks.php  viewer
+
+
+
+##  WebId Authentication
+Folder: lib/webidauth
 
 ## Setup
 
