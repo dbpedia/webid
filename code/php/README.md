@@ -4,6 +4,7 @@ The PHP Code folder contains the following elements:
 |- lib - Libraries
  |- server-webidauth: server code for WebId authentication  
   |- semsol-arc2: rdflib included from https://github.com/semsol/arc2/
+ |- shacl: some shacl stuff, ignore for now 
 |-apps
  |- thanks.php: a webservice, allowing to post a message on the messageboard with `curl` 
  |- messageboard: GUI for posting messages with WebID, deployed at https://webid.dbpedia.org/apps/messageboard/
