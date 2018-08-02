@@ -1,27 +1,40 @@
 # PHP Code
 The PHP Code folder contains the following elements:
 
-|-lib - Libraries
- |-webidauth WebId Authentication library 
-  |-semsol-arc2  
+|- lib - Libraries
+ |- server-webidauth: server code for WebId authentication  
+  |- semsol-arc2: rdflib included from https://github.com/semsol/arc2/
 |-apps
- |-thanks/thanks.php
- |-messageboard
- |-thanks.php  viewer
+ |- thanks 
+ |- messageboard
+ |- viewer
 
 
+## Requirements
+### PHP Versions used during development
+```
+Ubuntu 16.04. PHP 7.0.30-0ubuntu0.16.04.1 (cli) ( NTS )
+Ubuntu 18.04. PHP 7.2.7-0ubuntu0.18.04.2
+```
+### php-phpseclib used during development
+*NOTE* do not confuse with `php-seclib`, it is an older packages
 
-##  WebId Authentication
-Folder: lib/webidauth
-
-## Setup
-
-In order to use WebId authentication, you first need to install `phpseclib`.
-To install simply run 
+In order to use the server WebId authentication, which is the basis for all other code, you first need to install the `php-phpseclib`.
 
 ```
+# Ubuntu
 sudo apt-get install php-phpseclib
+# Tested with
+16.04. php-phpseclib (2.0.1-1build1)
+18.04. php-phpseclib (2.0.9-1)
+
 ```
+
+
+##  Server WebId Authentication
+Folder: lib/server-webidauth
+
+
 
 To use WebId Authentication in your application, put a copy of this folder into your project and include the `WebIdAuth.php` file.
 
@@ -34,11 +47,11 @@ include_once("webid/WebIdAuth.php");
 ?>
 ```
 
-## Examples
+### Examples
 
 You can find example applications [here](https://github.com/dbpedia/webid/tree/master/code/php/apps). 
 
-## Usage
+### Usage
 
 The `WebIdAuth.php` file contains a number of useful functions for authentication with WebId. To authenticate a client your server code needs to run the following steps
 
