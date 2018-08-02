@@ -1,8 +1,0 @@
-*.DS_Store
-plugins/*
-triggers/*
-tests/coverage/*
-/composer.lock
-vendor/
-tests/config.php
-/.php_cs.cache
