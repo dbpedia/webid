@@ -1,11 +1,10 @@
 <?php
 
 
-include_once("../WebIdAuth.php");
-include_once("../WebIdData.php");
+include_once("../lib/server-webidauth/WebIdAuth.php");
+include_once("../lib/server-webidauth/WebIdData.php");
 
 echo "Preparing Database...\n";
-
 
 $db = new SQLite3('../data/webid.db');
 $db->exec('CREATE TABLE IF NOT EXISTS comments(webid TEXT, message TEXT, postdate REAL)');
@@ -14,11 +13,13 @@ echo "Done!\n";
 
 try
 {
-	$webidauth = WebIdAuth::create($_SERVER["SSL_CLIENT_CERT"]);
+	$webidauth = WebIdAuth::authenticate($_SERVER["SSL_CLIENT_CERT"]);
 
-	if($webidauth->comparePublicKeys()) {
+	if($webIdAuth["status"] === WebIdAuth::AUTHENTICATION_SUCCESSFUL) {
 
-		$webid = new WebIdData($webidauth->webid_uri, $webidauth->webid_data);
+		$webIdUri = $webIdAuth["x509"]["webIdUri"]
+
+		$webid = new WebIdDocument($webIdUri);
 
 		echo "AUTHENTICATION SUCCESSFUL\n";
 		echo "Your Certificate and WebId are valid.\n";
@@ -26,7 +27,6 @@ try
 		echo "Name: ".$webid->getFoafName()."\n";
 		echo "Modulus: ".$webid->getCertModulus()."\n";
 		echo "Exponent: ".$webid->getCertExponent()."\n";
-
 
 		$message = $_REQUEST['message'];
 
@@ -39,9 +39,7 @@ try
 
 			if($message !== null && preg_match('/.*\S.*/', $message)) {
 
-				$webid_uri = $webid->getUri();
-
-				if($db->exec("INSERT INTO comments( webid, message, postdate ) VALUES ( '$webid_uri' , '$message', julianday('now') )")) {
+				if($db->exec("INSERT INTO comments( webid, message, postdate ) VALUES ( '$webIdUri' , '$message', julianday('now') )")) {
 					echo "Message successfully saved!\n";
 				} else {
 					echo "ERROR: Message has not been saved!";
@@ -53,7 +51,7 @@ try
 			echo "No message set, try again!";
 		}
 	} else {
-		echo "Could not validate the signature of your Certificate with your WebId Public Key.\n";
+		echo $webIdAuth["message"];
 	}
 } catch(Exception $e) {
 	echo $e;

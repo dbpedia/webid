@@ -1,8 +1,10 @@
 <?php
 
-include_once("../../webid/WebIdAuth.php");
+include_once("../../lib/server-webidauth/WebIdAuth.php");
 include_once("functions.php");
 
+
+session_start();
 
 if(!isset($_SESSION["webidauth"])) {
 
@@ -18,6 +20,7 @@ if(!isset($_SESSION["webidauth"])) {
 }
 
 $webIdAuth = $_SESSION["webidauth"];
+
 if(isset($_POST["register"]) && isset($_POST["termsandconditions"])) {
 
   if($webIdAuth["status"] === WebIdAuth::AUTHENTICATION_SUCCESSFUL) {
