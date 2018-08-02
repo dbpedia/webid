@@ -1,6 +1,8 @@
 # PHP Code
 The PHP Code folder contains the following elements:
 
+\
+|- verify.php : simple example implementation
 |- lib - Libraries
  |- server-webidauth: server code for WebId authentication  
   |- semsol-arc2: rdflib included from https://github.com/semsol/arc2/
