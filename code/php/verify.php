@@ -1,24 +1,29 @@
 <?php
 
-include_once("WebIdAuth.php");
-include_once("WebIdData.php");
+include_once("lib/webidauth/WebIdAuth.php");
+include_once("lib/webidauth/WebIdDocument.php");
 
 try
 {
-	$webidauth = WebIdAuth::create($_SERVER["SSL_CLIENT_CERT"]);
+	$webidauth = WebIdAuth::authenticate($_SERVER["SSL_CLIENT_CERT"]);
 
-	if($webidauth->comparePublicKeys()) {
+	if($webIdAuth["status"] === WebIdAuth::AUTHENTICATION_SUCCESSFUL) {
 
-		$webid = new WebIdData($webidauth->webid_uri, $webidauth->webid_data);
+		$webIdUri = $webIdAuth["x509"]["webIdUri"]
+
+		$webid = new WebIdDocument($webIdUri);
 
 		echo "SUCCESS\n";
 		echo "Your Certificate and WebId are valid.\n";
-		echo "WebId: ".$webidauth->webid_uri."\n";
+		echo "WebId: ".$webid->getUri()."\n";
 		echo "Name: ".$webid->getFoafName()."\n";
 		echo "Public Key: ".$webid->getPublicKey()."\n";
+
 	} else {
-		echo "Could not validate the signature of your Certificate with your WebId Public Key.\n";
+		echo $webIdAuth["message"];
 	}
+
+
 } catch(Exception $e) {
 	echo $e;
 }

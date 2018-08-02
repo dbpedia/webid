@@ -1,38 +1,37 @@
 <?php
 
 require 'header.php';
-include_once("../../WebIdAuth.php");
-include_once("../../WebIdData.php");
+include_once("../../lib/server-webidauth/WebIdAuth.php");
+include_once("../../lib/server-webidauth/WebIdDocument.php");
 
 session_start();
 
 $db = new SQLite3('../../data/webid.db');
-$webidauth = null;
-$webid = null;
-$authenticated = false;
 
-try {
+if(!isset($_SESSION["webidauth"])) {
 
-  $webidauth = WebIdAuth::create($_SERVER["SSL_CLIENT_CERT"]);
+  try {
 
-  $db->exec('CREATE TABLE IF NOT EXISTS comments(webid TEXT, message TEXT, postdate REAL)');
+    $_SESSION["webidauth"] = WebIdAuth::authenticate($_SERVER["SSL_CLIENT_CERT"]);
 
-  if($webidauth->comparePublicKeys()) {
+  } catch(Exception $e) {
 
-    $webid = new WebIdData($webidauth->webid_uri, $webidauth->webid_data);
-    $authenticated = true;
+    // Something went super wrong
+    echo $e;
   }
-
-} catch(Exception $e) {
-  echo $e;
 }
 
-$webid_name = "Unknown";
+$db->exec('CREATE TABLE IF NOT EXISTS comments(webid TEXT, message TEXT, postdate REAL)');
 
-if($authenticated) {
+$webIdAuth = $_SESSION["webidauth"];
+$webIdUri = "";
+$webIdName = "Unknown";
 
-  $webid_uri = $webid->getUri();
-  $webid_name = $webid->getFoafName();
+if($webIdAuth["status"] === WebIdAuth::AUTHENTICATION_SUCCESSFUL) {
+
+  $webIdUri = $webIdAuth["x509"]["webIdUri"];
+  $webId = new WebIdDocument($webIdUri);
+  $webIdName = $webId->getFoafName();
 
   if(filter_input(INPUT_POST, 'message') !== null) {
 
@@ -42,7 +41,7 @@ if($authenticated) {
     $message = str_replace($quotes, $doubles, $message);
 
     if($message !== null && preg_match('/.*\S.*/', $message)) {
-      $db->exec("INSERT INTO comments( webid, message, postdate ) VALUES ( '$webid_uri', '$message', julianday('now') )");
+      $db->exec("INSERT INTO comments( webid, message, postdate ) VALUES ( '$webIdUri', '$message', julianday('now') )");
     }
 
     // header("location: index.php");
@@ -54,8 +53,8 @@ if($authenticated) {
     $delete_id = filter_input(INPUT_POST, 'id');
     $delete_author = filter_input(INPUT_POST, 'author');
 
-    if($delete_author == $webid_uri) {
-      $db->exec("DELETE FROM comments WHERE webid='$webid_uri' AND rowid=$delete_id LIMIT 1");
+    if($delete_author == $webIdUri) {
+      $db->exec("DELETE FROM comments WHERE webid='$webIdUri' AND rowid=$delete_id LIMIT 1");
     }
 
     //header("location: index.php");
@@ -73,7 +72,7 @@ $results = $db->query("SELECT webid, message, rowid, CAST ((julianday('now') - j
    <div class="hero-body">
     <div class="container has-text-centered">
       <h1 class="title">
-        Hi there, <?=$webid_name?>!
+        Hi there, <?=$webIdName?>!
       </h1>
       <h2 class="subtitle">
         Welcome to the Message Board!
@@ -86,7 +85,7 @@ $results = $db->query("SELECT webid, message, rowid, CAST ((julianday('now') - j
 
   <div class="container">
 
-    <?php if($authenticated) { ?>
+    <?php if($webIdAuth["status"] === WebIdAuth::AUTHENTICATION_SUCCESSFUL) { ?>
 
 
     <div class="content">
@@ -121,14 +120,8 @@ $results = $db->query("SELECT webid, message, rowid, CAST ((julianday('now') - j
       }
 
       $count++;
-          // Parse the WebId with a TTL parser
-      $rowParser = ARC2::getRDFParser();
-      $rowParser->parse($row["webid"]);
 
-      //$count = $count + 1;
-          // Create an index from the parsed TTL
-      $rowIndex = $rowParser->getSimpleIndex();
-      $rowData = new WebIdData($row["webid"], $rowIndex);
+      $rowData = new WebIdDocument($row["webid"]);
 
 
       $rowName = $rowData->getFoafName();
