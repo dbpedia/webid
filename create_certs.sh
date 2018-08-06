@@ -79,7 +79,7 @@ O=${cert_org}
 # Organizational Unit
 OU=${cert_org_unit}
 # Email Address
-emailAddress=${cert_email}
+emailAddress = "${cert_email}"
 # Name
 CN=${cert_name}
 
@@ -90,7 +90,7 @@ subjectAltName = @alt_names
 
 [ alt_names ]
 # Web Id
-URI=${webid_uri}
+URI = "${webid_uri}"
 EOL
 
 echo "Generating x509 Certificate"
