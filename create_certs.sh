@@ -99,6 +99,14 @@ openssl req -x509 -new -nodes -key private_key_$file_suffix.pem -days 3650 -out 
 echo "Generating PKCS12 Certificate"
 openssl pkcs12 -export -out certificate_$file_suffix.pfx -inkey private_key_$file_suffix.pem -in x509_$file_suffix.cer
 
+# additional format for curl 
+echo "Converting PKCS12 file to PEM (used by curl)"
+openssl pkcs12 -in certificate_$file_suffix.pfx -out certificate_$file_suffix.pem
+
+# additional format for java
+echo "Converting Private Key to DER (used by java and Databus Maven Plugin)"
+openssl pkcs8 -topk8 -inform PEM -outform DER -in private_key_$file_suffix.pem -out private_key_$file_suffix.der -nocrypt
+
 echo "Generating WebId Cert Content"
 cat > webid_cert_$file_suffix.txt <<EOL
 cert:key [
