@@ -113,7 +113,7 @@ cert:key [
       a cert:RSAPublicKey;
       rdfs:label "${webid_cert_label}";
       cert:modulus "${modulus}"^^xsd:hexBinary;
-      cert:exponent "${exponent}"^^xsd:integer;
+      cert:exponent "${exponent}"^^xsd:nonNegativeInteger
      ] .
 EOL
 
