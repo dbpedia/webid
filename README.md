@@ -39,7 +39,7 @@ If you open it in a browser or `curl` it the `#this` is ignored and the full tur
        a cert:RSAPublicKey;
        rdfs:label "made on 23 November 2011 on my laptop";
        cert:modulus "978CD24[...]3F29B"^^xsd:hexBinary;
-       cert:exponent "65537"^^xsd:integer;
+       cert:exponent "65537"^^xsd:nonNegativeInteger
       ] .
 ``` 
 
@@ -53,7 +53,7 @@ Note that this also contains the files `private_key.pem` and `certificate.pfx` ,
 3. The WebID profile document `must` contain:
  * A `foaf:primaryTopic` from the WebID profile URI to the WebID.
  * A statement whether the WebID is a `foaf:Person`, `foaf:Organisation` or `foaf:Agent`
- * The modulus and exponent of the RSAPublicKey
+ * The modulus and of the RSAPublicKey
 4. The WebID profile document `should` be public as in open access like the majority of websites. 
 5. The private key as well as the PKCS12 (.pfx,.p12) file `must` be kept in a secure location (normally password protected file or entrusted to a web browser).  
 6. The X.509 Certificate, which is part of the PKCS12 file `must` contain the WebID in the `subject alternative name` (SAN) field
@@ -109,7 +109,7 @@ Create a new file and name it `webid.ttl`. Make sure to replace YOUR_NAME, PUBLI
        a cert:RSAPublicKey;
        rdfs:label "THIS FIELD IS FOR YOUR LABEL, SO YOU CAN NAME DIFFERENT KEYS";
        cert:modulus "PUBLIC_KEY_MODULUS(NO WHITSPACE, REMOVE 'modulus=`)"^^xsd:hexBinary;
-       cert:exponent "PUBLIC_KEY_EXPONENT(NO  WHITESPACE)"^^xsd:integer ;
+       cert:exponent "PUBLIC_KEY_EXPONENT(NO  WHITESPACE)"^^xsd:nonNegativeInteger 
       ] . 
 
 ``` 
@@ -132,7 +132,7 @@ A complete WebId Document can look like this:
        a cert:RSAPublicKey;
        rdfs:label "made on 23 November 2011 on my laptop";
        cert:modulus "978CD245ADD11F018D321D2A96D5E78BFC2DE540FC2BDFF1A1E46EF3C015A5855155D962DCC538E7BD2927825B2B6FD1048DDE7DC2B2ACDBB9602D87EAA03461A5AEA48DE59709DE9097070146BA8AA3D436780FEA7F328DD3C8DF0D7B359E38B9C2EC37EE2DAD309CDC878FF2CE4DDA48D683C122894D2D892069C77C72FFF977C10BFCE614E243E5B4C919DE6DE5E0D26BFAE9E15385A420E31CDD527388B31B7AA4CAB3B4753F00F7BB58AC4472D5D129B325A539EC02DF5C660311030C452BE05DBB2AF52C0B2D6CBC3843EF0DD87BBCF558F546C82045FDD5D27B1CC1E5C3FC4327391D8727A8E422F45E0F10562A908863A0A93AA3D613B5ADA1A3F29B"^^xsd:hexBinary;
-       cert:exponent "65537"^^xsd:integer;
+       cert:exponent "65537"^^xsd:nonNegativeInteger 
       ] .
 ```
 
