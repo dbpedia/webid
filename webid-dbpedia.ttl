@@ -1,0 +1,21 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix cert: <http://www.w3.org/ns/auth/cert#> .
+@prefix rdfs: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+
+<> a foaf:PersonalProfileDocument ;
+   foaf:maker <#this> ;
+   foaf:primaryTopic <#this> .
+
+<#this> a foaf:Organization ;
+   a dbo:Organisation ;
+   foaf:name "DBpedia Association";
+
+
+	cert:key [
+		  a cert:RSAPublicKey;
+		  rdfs:label "Private key for signing the Generic releases";
+		  cert:modulus "D0144E9CB6976C99DA0090093D9D8F166C8E372D9A1248BE7297C80AEE2C1043FA8357E6C09645FC9F50C5F52DA8C8489E1F302C165B118B37D705B7627E0AE994DFA5895D830BB376EB6A89BE200C19FE6BF91242807AE3BE84689514C1547C1177AA4A9AFAC878826C005C9FC961FB02BFEF7BC7B066D580240412F5C266E7C102C23013CAA037234257C0617FEB2421EBAA2FBD8C2EFA572C48BBE0E318CFF848612469F9A0892BF14642288AA521128174B22EA5B2F475541A533BF0ADAA05F832F6A0C8E835C3ED75BB947BAF111100734FB2505E122ED2C85A10722AC4813AA6BD10C516A41B382A8B40908DA76809E2A14D83ADF88BAA9C94A5AE7FB5"^^xsd:hexBinary;
+		  cert:exponent "65537"^^xsd:nonNegativeInteger
+		 ] .
