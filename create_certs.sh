@@ -18,7 +18,7 @@ read -p "Organizational Unit Name (eg, section): " cert_org_unit
 
 # File information
 echo "Please enter your file information"
-read -p "Certificate File Suffix: " file_suffix
+read -p "Certificate File Suffix (certificate file will be named "certificate_[suffix]"): " file_suffix
 
 
 echo "Generating Private Key"
