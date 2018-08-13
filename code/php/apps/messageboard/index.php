@@ -27,7 +27,7 @@ $webIdAuth = $_SESSION["webidauth"];
 $webIdUri = "";
 $webIdName = "Unknown";
 
-if($webIdAuth["status"] === WebIdAuth::AUTHENTICATION_SUCCESSFUL) {
+if($webIdAuth["status"] === WebIdAuthStatus::AUTH_SUCCESS) {
 
   $webIdUri = $webIdAuth["x509"]["webIdUri"];
   $webId = new WebIdDocument($webIdUri);
@@ -85,7 +85,7 @@ $results = $db->query("SELECT webid, message, rowid, CAST ((julianday('now') - j
 
   <div class="container">
 
-    <?php if($webIdAuth["status"] === WebIdAuth::AUTHENTICATION_SUCCESSFUL) { ?>
+    <?php if($webIdAuth["status"] === WebIdAuthStatus::AUTH_SUCCESS) { ?>
 
 
     <div class="content">
@@ -149,7 +149,7 @@ $results = $db->query("SELECT webid, message, rowid, CAST ((julianday('now') - j
                 <br>
                 <?=$row["message"]?>
               </div>
-              <?php if($authenticated && $row["webid"] === $webid->getUri()) { ?>
+              <?php if($webIdAuth["status"] === WebIdAuthStatus::AUTH_SUCCESS && $row["webid"] === $webIdUri) { ?>
 
               <form action="" method="post" >
                 <input type="hidden" name="id" value="<?=$row['rowid']?>">

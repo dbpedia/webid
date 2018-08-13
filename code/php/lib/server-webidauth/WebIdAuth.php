@@ -6,6 +6,7 @@ include_once("phpseclib/File/ASN1.php");
 include_once("phpseclib/Math/BigInteger.php");
 include_once("phpseclib/Crypt/RSA.php");
 include_once("phpseclib/Crypt/Hash.php");
+include_once("WebIdAuthStatus.php");
 
 use phpseclib\File\X509;
 use phpseclib\Math\BigInteger;
@@ -38,8 +39,7 @@ class WebIdAuth
 
     // ERROR: No certificate passed
     if($client_cert_pem === null || $client_cert_pem === "") {
-      $result["status"] = WebIdAuth::INVALID_CERTIFICATE;
-      $result["message"] = "Client has not passed a certificate";
+      $result["status"] = WebIdAuthStatus::CERT_NOT_PASSED;
       return $result;
     }
 
@@ -48,30 +48,39 @@ class WebIdAuth
 
     // Validate the x509 certificate
     if(!isset($result["x509"]["webIdUri"])) {
-      $result["status"] = WebIdAuth::INVALID_CERTIFICATE;
-      $result["message"] = "SAN field does not contain a WebId URI";
+      $result["status"] = WebIdAuthStatus::CERT_SAN_NOT_SET;
       return $result;
     }
 
+    $webIdUri = $result["x509"]["webIdUri"];
+
+    //TODO: Validate webId uri, set WebIdAuthStatus::CERT_MALFORMED_URL
+
+
     // Load the WebId document
-    $result["webId"] = WebIdAuth::loadWebId($result["x509"]["webIdUri"]);
+    $result["webId"] = WebIdAuth::loadWebId($webIdUri);
+
+    if(isset($result["webId"]["errors"])) {
+      $result["status"] = WebIdAuthStatus::WEBID_NOT_LOADABLE;
+      return $result;
+    }
 
     // Validate the WebId document
     if(!isset($result["webId"]["webIdPublicKeys"])) {
-      $result["status"] = WebIdAuth::AUTHENTICATION_FAILED;
-      $result["message"] = "The referenced WebId document does not contain any RSA keys.";
+      $result["status"] = WebIdAuthStatus::WEBID_NO_RSA_KEYS;
       return $result;
     }
 
+    // TODO: Validiate RSA key , set WebIdAuthStatus::WEBID_MALFORMED_RSA_KEY
+
     // Validate the certificate signature
     if(!WebIdAuth::hasKeyMatch($result["webId"]["webIdPublicKeys"], $result["x509"]["certificatePublicKey"])) {
-      $result["status"] = WebIdAuth::AUTHENTICATION_FAILED;
-      $result["message"] = "Your certificate has not been signed by any of the keys in your WebId document";
+      $result["status"] = WebIdAuthStatus::AUTH_FAILED;
       return $result;
     }
 
     // Authentication successful!
-    $result["status"] = WebIdAuth::AUTHENTICATION_SUCCESSFUL;
+    $result["status"] = WebIdAuthStatus::AUTH_SUCCESS;
     return $result;
   }
 
@@ -103,12 +112,22 @@ class WebIdAuth
   */
   static function loadWebId($webIdUri) {
 
+    // TODO: check webid uri
     // Parse the WebId with a TTL parser
     $parser = ARC2::getRDFParser();
     $parser->parse($webIdUri);
 
+    $webIdData = array();
+
+    if($parser->getErrors() !== null && sizeof($parser->getErrors()) > 0) {
+      $webIdData["errors"] = $parser->getErrors();
+      return $webIdData;
+    }
+
     // Create an index from the parsed TTL
     $webIdData = $parser->getSimpleIndex();
+
+
 
     if(isset($webIdData[$webIdUri]["http://www.w3.org/ns/auth/cert#key"])) {
 
@@ -168,6 +187,13 @@ class WebIdAuth
 
     return $rsa->getPublicKey(RSA::PUBLIC_FORMAT_PKCS1);
   }
+}
+
+try
+{
+
+} catch(Exception $e) {
+  echo $e;
 }
 
 ?>

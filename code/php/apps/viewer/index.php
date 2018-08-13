@@ -23,7 +23,7 @@ $webIdAuth = $_SESSION["webidauth"];
 
 if(isset($_POST["register"]) && isset($_POST["termsandconditions"])) {
 
-  if($webIdAuth["status"] === WebIdAuth::AUTHENTICATION_SUCCESSFUL) {
+  if($webIdAuth["status"] === WebIdAuthStatus::AUTH_SUCCESS) {
 
     $webIdUri = $webIdAuth["x509"]["webIdUri"];
 
@@ -44,8 +44,6 @@ if(isset($_POST["register"]) && isset($_POST["termsandconditions"])) {
 
     file_put_contents('people.js', $exhibitJson);
 
-  } else {
-    echo print_r($webIdAuth);
   }
 }
 
@@ -89,7 +87,7 @@ if(isset($_POST["register"]) && isset($_POST["termsandconditions"])) {
           ex:expressions=".name">
       </div>
 
-        <?php if($webIdAuth["status"] === WebIdAuth::AUTHENTICATION_SUCCESSFUL) { ?>
+        <?php if($webIdAuth["status"] === WebIdAuthStatus::AUTH_SUCCESS) { ?>
 
 
           <p class="control">
@@ -99,7 +97,7 @@ if(isset($_POST["register"]) && isset($_POST["termsandconditions"])) {
        </p>
 
         <?php } else { ?>
-          <p><?=$webIdAuth["message"]?> Learn how to <a href="github.com/webid">create your WebId</a></p>
+          <p><?=WebIdAuthStatus::msg[$webIdAuth["status"]]?> Learn how to <a href="github.com/webid">create your WebId</a></p>
         <?php } ?>
 
       </div>
