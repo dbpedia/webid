@@ -296,8 +296,11 @@ You can try out your WebId by sending us a message by running
  curl -v -L --cert certificate.pem:yourpassword --data-urlencode "message=Thanks for the Tutorial!" https://webid.dbpedia.org/app/thanks.php
 ```
 
-To verify your browser installation, you can go to https://webid.dbpedia.org/messageboard and post a message using your new WebId.
+## Applications using WebId Authentication
 
+We have set up two example applications to verify your browser installation.
+You can leave us a message on the messageboard at https://webid.dbpedia.org/messageboard.
+Also feel free to register for the WebId Community Viewer at https://webid.dbpedia.org/viewer.
 
 ## Content validation of WebID 
 TODO shacl 
