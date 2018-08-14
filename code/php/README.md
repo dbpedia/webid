@@ -33,6 +33,29 @@ sudo apt-get install php-phpseclib
 
 ```
 
+### SSL enabled server
+In order to receive the client certificate and webid information from the connecting clients, you need to configure your server to use SSL encryption.
+If you haven't already, you will need to create a SSL certificate for your server. You can get a free certificate at https://letsencrypt.org/
+
+Once you have set up your server for SSL, the config file for your application (usually located in `/etc/apache2/sites-available/`) should contain the following lines:
+
+```
+SSLEngine on
+ SSLCertificateFile /path/to/your/cert.crt
+SSLCertificateKeyFile /path/to/your/key.key
+```
+
+Add the following lines below, save the config file and restart your server.
+
+```
+ SSLVerifyClient optional_no_ca
+ SSLVerifyDepth 1
+ SSLOptions +StdEnvVars +ExportCertData
+```
+
+When connecting to your server, clients should now be prompted for a client certificate, if they have one installed in their browser.
+You can access the client certificate via the server variable (`$_SERVER["SSL_CLIENT_CERT"]`).
+
 
 ##  Server WebId Authentication
 Folder: lib/server-webidauth
