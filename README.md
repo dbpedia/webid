@@ -1,6 +1,9 @@
 # WebID
 WebID Creation and Validation (Tutorial, Tools, Best practices)
 
+# Too Long;Didn't read?
+There is a useful [Helper Script](https://github.com/dbpedia/webid#using-the-helper-script) below called `create_certs.sh`, which you can run and fill out. 
+
 # Authors
 Jan Forberg and Sebastian Hellmann, DBpedia and KILT Competence Center @ InfAI
 License [CC-BY](https://creativecommons.org/licenses/by/3.0/)  © 2018
