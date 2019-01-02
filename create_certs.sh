@@ -96,7 +96,7 @@ EOL
 echo "Generating x509 Certificate"
 openssl req -x509 -new -nodes -key private_key_$file_suffix.pem -days 3650 -out x509_$file_suffix.cer -config cert_${file_suffix}.config -extensions v3_req
 
-echo "Generating PKCS12 Certificate"
+echo "Generating PKCS12 Certificate (as needed by the Browser and the Databus Maven Plugin)"
 openssl pkcs12 -export -out certificate_$file_suffix.pfx -inkey private_key_$file_suffix.pem -in x509_$file_suffix.cer
 
 # additional format for curl 
