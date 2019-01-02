@@ -104,8 +104,8 @@ echo "Converting PKCS12 file to PEM (used by curl)"
 openssl pkcs12 -in certificate_$file_suffix.pfx -out certificate_$file_suffix.pem
 
 # additional format for java
-echo "Converting Private Key to DER (used by java and Databus Maven Plugin)"
-openssl pkcs8 -topk8 -inform PEM -outform DER -in private_key_$file_suffix.pem -out private_key_$file_suffix.der -nocrypt
+#echo "Converting Private Key to DER (used by java and Databus Maven Plugin)"
+#openssl pkcs8 -topk8 -inform PEM -outform DER -in private_key_$file_suffix.pem -out private_key_$file_suffix.der -nocrypt
 
 echo "Generating WebId Cert Content"
 cat > webid_cert_$file_suffix.txt <<EOL
