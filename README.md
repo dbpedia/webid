@@ -20,14 +20,14 @@ We compiled a list of background reading at the end.
 WebID or WebID URI - The WebID itself is an identifier that represents a person or an organisation. In simple terms it is a self-chosen URI that can be used to retrieve additional information in form of the WebID profile document via the browser or with software (e.g. `curl`). Note the duplicate in WebID(entifier) and Uniform Resource Identifier (URI).     
 Examples:
 
-WebID profile document or WebID file - The WebID profile document is the file that is downloaded when you execute a HTTP(S) request  and contains the identifier and all relevant information about the person and organisation, in particular the RSA Public Key used to verify authentication. The file is normally written in Turtle Syntax (RDF).
+WebID profile document or WebID file - The WebID profile document is the file that is downloaded when you execute a HTTP(S) request  and contains the identifier and all relevant information about the person and organisation, in particular one or several RSA Public Keys used to verify authentication. The file is normally written in Turtle Syntax (RDF).
 
-`#` fragment - In website URLs the `#` is used to jump to certain parts of a HTML page, usually a paragraph. In WebID, the URL of the WebID profile document is appended by a fragment `#this` or `#me` to distinguish between the URL of the WebID profile document (the whole file) and the identifier and data in the document (part of the file).  
+`#` fragment - In website URLs the `#` is used to jump to certain parts of a HTML page, usually a paragraph. In WebID, the URL of the WebID profile document is appended by a fragment `#this` to distinguish between the URL of the WebID profile document (the whole file) and the identifier and data in the document (part of the file).  
 
 Client Certificate or PKCS12 File (*.pfx;*.p12) - The file that contains an X.509 certificate along with the private key to establish the secure connection and authentication. 
 
 # Example 1
-This is Jan's WebID: `http://holycrab13.github.io/webid.ttl#this`
+This is Jan's WebID: `http://holycrab13.github.io/webid.ttl#this` stored in the Turtle file `http://holycrab13.github.io/webid.ttl`
 If you open it in a browser or `curl` it the `#this` is ignored and the full turtle file is retrieved. In the turtle file you can find a section with additional information about Jan as well as his public key:
 * HTTP retrieval: `curl -H "Accept: text/turtle" "http://holycrab13.github.io/webid.ttl#this"`
 * Retrieval and RDF parsing : `rapper -i turtle http://holycrab13.github.io/webid.ttl#this`
@@ -314,7 +314,7 @@ http://ods-qa.openlinksw.com/youid
 http://linkeddata.uriburner.com/sparql 
 
 
-# TODO
+## Example of signing a file 
 ```
 openssl dgst -sha256 -sign ~/.ssh/$private_key  anyFile.txt  | openssl base64 -out anyFile.signed
 ```
