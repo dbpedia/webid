@@ -283,11 +283,17 @@ You can upload your `certificate.pfx` to your browser via the settings
 
 We assume that HTTP Header and Turtle syntax have been checked before (see above). This part outlines additional validation to see whether everything is working. 
 
+## Testing of client certificate and secure connection
+http://id.myopenlink.net/ods/webid_demo.html 
+
 ## Certificate and WebId Validation using curl
+
+**Please use the [databus maven plugin](https://github.com/dbpedia/databus-maven-plugin) and `mvn validate`**
 
 To verify your certificate, you can run 
 
 ```
+currently broken
  curl -v -L --cert certificate.pem:yourpassword https://webid.dbpedia.org/verify.php
 ```
 
@@ -296,6 +302,7 @@ If everything is configured correctly, this will return your WebId and Public Ke
 You can try out your WebId by sending us a message by running
 
 ```
+currently broken
  curl -v -L --cert certificate.pem:yourpassword --data-urlencode "message=Thanks for the Tutorial!" https://webid.dbpedia.org/app/thanks.php
 ```
 
@@ -309,8 +316,7 @@ Also feel free to register for the WebId Community Viewer at https://webid.dbped
 TODO shacl 
 
 
-## Testing of client certificate and secure connection
-http://id.myopenlink.net/ods/webid_demo.html 
+
 
 ## Testing of authentication
 http://ods-qa.openlinksw.com/youid
