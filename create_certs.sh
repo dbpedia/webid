@@ -39,18 +39,20 @@ length=${#arrIN[@]}
 
 for i in "${arrIN[@]}"; do
     # process "$i"
-    if (( k > 1 )) && (( k < length - 1 ))
+    if (( $k > 1 )) && (( $k < $length - 1 ))
     then
       modulus=$modulus$i
     fi
 
-    if (( k == length -1 ))
+    if (( $k == $length -1 ))
     then
       exponent=$i
     fi
 
-    k=$((k+1))
+    k=$(($k+1))
 done
+echo $modulus
+echo $exponent
 
 modulus=${modulus//[: ]/}
 modulus="${modulus:2}"
