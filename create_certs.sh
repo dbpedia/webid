@@ -51,8 +51,6 @@ for i in "${arrIN[@]}"; do
 
     k=$(($k+1))
 done
-echo $modulus
-echo $exponent
 
 modulus=${modulus//[: ]/}
 modulus="${modulus:2}"
